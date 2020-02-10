@@ -9,6 +9,8 @@ class DenseGene:
     __m_rate_nodes = 1.0
     __m_rate_activation = 1.0
     __m_rate_both = 1.0
+    __low_node_percentage = 0.75
+    __high_node_percentage = 1.5
 
     def __init__(self, nodes, activation, max_no_nodes):
         self.node_count = nodes
@@ -36,7 +38,7 @@ class DenseGene:
         return m_rate_nodes, m_rate_activation, m_rate_both
 
     # sets node_count to random number between 0 and max_no_nodes
-    def __mutate_nodes(self): self.node_count = random.randrange(0, self.max_no_nodes+1)
+    def __mutate_nodes(self): self.node_count = random.uniform(self.__low_node_percentage*self.node_count, self.__high_node_percentage*self.node_count)
 
     # sets activation function to a random
     def __mutate_activation(self): self.activation = Activation(random.randrange(1, len(Activation)+1))
