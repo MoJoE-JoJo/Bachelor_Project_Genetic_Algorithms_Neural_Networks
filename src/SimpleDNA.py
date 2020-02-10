@@ -43,3 +43,4 @@ class SimpleDNA:
 
 
     #fitness function, modtager input-shape, output shape, og datasættet, generer det neurale netværk, og køre det. Evaluerer det med cross evaluation
+    #husk logik til at håndterer hvis der er 0 nodes i et gen, da der så ikke skal laves et lag
