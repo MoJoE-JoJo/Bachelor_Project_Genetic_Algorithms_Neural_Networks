@@ -3,6 +3,7 @@ from random import random
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
 
+
 # A class to hold the overall hyperparameters of the neural network that can be modified,
 # these being the optimizer and the loss function
 class OverallGene:
@@ -34,6 +35,8 @@ class OverallGene:
         m_rate_both = self.__m_rate_both / m_rate_sum
         return m_rate_optimizer, m_rate_loss, m_rate_both
 
+    # sets optimizer to a random
     def __mutate_optimizer(self): self.optimizer = Optimizer(random.randrange(1, len(Optimizer) + 1))
 
+    # sets loss function to a random
     def __mutate_loss(self): self.optimizer = Loss(random.randrange(1, len(Loss)+1))
