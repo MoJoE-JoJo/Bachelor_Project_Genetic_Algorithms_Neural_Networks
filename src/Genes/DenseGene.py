@@ -21,9 +21,9 @@ class DenseGene:
         mutation = random.uniform(0.0, 1.0)
         if mutation <= m_rate_nodes:
             self.__mutate_nodes()
-        elif mutation <= m_rate_activation:
+        elif mutation <= m_rate_nodes + m_rate_activation:
             self.__mutate_activation()
-        elif mutation <= m_rate_both:
+        elif mutation <= m_rate_nodes + m_rate_activation + m_rate_both:
             self.__mutate_nodes()
             self.__mutate_activation()
 
