@@ -15,10 +15,22 @@ from src.SimpleDNA import SimpleDNA
 
 
 class SimpleGA:
-    _population_size = 10
-    _population = []
+    population_size = 10
 
     def __init__(self, input_shape, output_size):
         self.input_shape = input_shape
         self.output_size = output_size
-        self._population = [SimpleDNA() for i in range(self._population_size)]
+        self.population = [SimpleDNA() for i in range(self.population_size)]
+        self.evolution()
+
+
+    # def evolution(self):
+    #    while True:
+            # check fitness for all individer
+            # udvælge de bedste individer
+            # Skal bagefter køre på testsættet med den bedste (kaldet champion), og det er det bedste resultat fra den generation.
+            #Reproduction, parrere de bedste individer
+
+     #construct NN
+
+

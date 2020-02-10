@@ -12,10 +12,9 @@ class DenseGene:
     __low_node_percentage = 0.75
     __high_node_percentage = 1.5
 
-    def __init__(self, nodes, activation, max_no_nodes):
+    def __init__(self, nodes, activation):
         self.node_count = nodes
         self.activation = activation
-        self.max_nodes = max_no_nodes
 
     # uses the normalized mutations rates as probabilities for each kind of mutation
     def mutate(self):
