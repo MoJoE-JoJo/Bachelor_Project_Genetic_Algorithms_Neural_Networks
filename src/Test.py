@@ -62,7 +62,7 @@ model = tf.keras.models.Sequential([
   tf.keras.layers.Dense(10, activation='softmax')
 ])
 
-loss = Loss.categorical_crossentropy
+loss = Loss.huber_loss
 optimizer = Optimizer.Adam
 
 if loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):

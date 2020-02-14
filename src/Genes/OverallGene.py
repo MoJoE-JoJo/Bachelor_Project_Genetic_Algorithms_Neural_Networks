@@ -1,4 +1,4 @@
-from random import random
+import random
 
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
@@ -21,9 +21,9 @@ class OverallGene:
         mutation = random.uniform(0.0, 1.0)
         if mutation <= m_rate_optimizer:
             self.__mutate_optimizer()
-        elif mutation <= m_rate_loss:
+        elif mutation <= m_rate_loss + m_rate_optimizer:
             self.__mutate_loss()
-        elif mutation <= m_rate_both:
+        elif mutation <= m_rate_both + m_rate_loss + m_rate_optimizer:
             self.__mutate_optimizer()
             self.__mutate_loss()
 
@@ -39,4 +39,4 @@ class OverallGene:
     def __mutate_optimizer(self): self.optimizer = Optimizer(random.randrange(1, len(Optimizer) + 1))
 
     # sets loss function to a random
-    def __mutate_loss(self): self.optimizer = Loss(random.randrange(1, len(Loss)+1))
+    def __mutate_loss(self): self.loss_function = Loss(random.randrange(1, len(Loss)+1))
