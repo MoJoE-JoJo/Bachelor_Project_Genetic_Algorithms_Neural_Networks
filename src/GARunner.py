@@ -25,7 +25,7 @@ OPTIMIZER = Optimizer.Adam
 
 # GA parameters
 POPULATION_SIZE = 10
-MATINGPOOL = 5  # Must be between 0 and POPULATION_SIZE
+MATINGPOOL = 10  # Must be between 0 and POPULATION_SIZE
 MUTATION_RATE = 0.3  # Must be between 0 and 1
 
 
@@ -40,5 +40,6 @@ ga = LonelyGA(input_shape=INPUT_SHAPE,
               mutation_rate=MUTATION_RATE,
               scaling=SCALING,
               dataset=DATASET,
-              epochs=EPOCHS)
+              epochs=EPOCHS,
+              matingpool=MATINGPOOL)
 

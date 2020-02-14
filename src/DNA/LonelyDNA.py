@@ -21,7 +21,7 @@ class LonelyDNA:
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.gene = LonelyGene(random.randrange(0, self.initial_max_nodes+1), self.activation)
+        self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1), self.activation)
 
     # uses the normalized mutations rates as probabilities for the number of mutations
     def mutate(self):
