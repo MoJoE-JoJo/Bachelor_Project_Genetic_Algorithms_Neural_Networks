@@ -2,8 +2,8 @@ import os
 import numpy as np
 import tensorflow as tf
 
-from datagenerator import ImageDataGenerator
-import visualization
+from src.State_of_the_art.SimpleNet_TF_master.datagenerator import ImageDataGenerator
+import src.State_of_the_art.SimpleNet_TF_master.visualization as visualization
 
 from datetime import datetime
 from tensorflow.python.data import Iterator
@@ -44,7 +44,6 @@ TEST = "keep"
 
 # x - input image
 x = tf.placeholder("float32", shape=[None, IMAGE_SIZE, IMAGE_SIZE, CHANNEL], name="x")
-
 # y correct image class, using one-hot encoding
 y_true = tf.placeholder("float32", shape=[None, NUM_CLASSES], name="y_true")
 
@@ -426,7 +425,8 @@ def main():
     
     if(EPOCH == 0):
         TestGraph()
-        
+
+
 if __name__ == "__main__":
     main()
     
