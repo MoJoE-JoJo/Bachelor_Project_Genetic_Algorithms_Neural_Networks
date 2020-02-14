@@ -6,8 +6,8 @@ import random
 from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
-from src.Genes.DenseGene import DenseGene
-from src.Genes.OverallGene import OverallGene
+from src.Genes.SimpleGenes.DenseGene import DenseGene
+from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
 # Contains two genes, one overall gene and one dense gene.
