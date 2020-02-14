@@ -1,4 +1,4 @@
-from random import random
+import random
 
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
