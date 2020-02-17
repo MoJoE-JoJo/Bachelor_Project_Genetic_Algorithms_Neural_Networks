@@ -58,11 +58,11 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)),
-  tf.keras.layers.Dense(128, activation=Activation(3).name),
+  tf.keras.layers.Dense(128, activation=Activation.relu.name),
   tf.keras.layers.Dense(10, activation='softmax')
 ])
 
-loss = Loss.huber_loss
+loss = Loss.sparse_categorical_crossentropy
 optimizer = Optimizer.Adam
 
 if loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
