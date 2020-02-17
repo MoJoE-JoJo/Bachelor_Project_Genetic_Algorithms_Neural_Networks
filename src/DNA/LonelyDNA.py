@@ -21,7 +21,7 @@ class LonelyDNA:
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1), self.activation)
+        self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
     # uses the normalized mutations rates as probabilities for the number of mutations
     def mutate(self):
@@ -37,7 +37,7 @@ class LonelyDNA:
 
         model = tf.keras.models.Sequential([
             tf.keras.layers.Flatten(input_shape=input_shape),
-            tf.keras.layers.Dense(self.gene.node_count, activation=self.gene.activation.name),
+            tf.keras.layers.Dense(self.gene.node_count, activation=self.activation.name),
             tf.keras.layers.Dense(output_shape, activation='softmax')
         ])
 

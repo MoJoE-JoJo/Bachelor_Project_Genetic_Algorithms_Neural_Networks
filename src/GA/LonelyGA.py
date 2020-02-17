@@ -33,7 +33,7 @@ class LonelyGA:
                           self.population[0].optimizer.name,
                           self.population[0].loss.name,
                           self.population[0].gene.node_count,
-                          self.population[0].gene.activation.name,
+                          self.population[0].activation.name,
                           self.population[0].fitness))
 
             self.generation_counter += 1

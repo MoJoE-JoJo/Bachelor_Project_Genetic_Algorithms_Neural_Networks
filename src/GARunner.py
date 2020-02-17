@@ -28,7 +28,7 @@ POPULATION_SIZE = 10
 MATINGPOOL = 10  # Must be between 0 and POPULATION_SIZE
 MUTATION_RATE = 0.3  # Must be between 0 and 1
 
-
+print("GA Started")
 gc.enable()
 ga = LonelyGA(input_shape=INPUT_SHAPE,
               output_shape=OUTPUT_SHAPE,
