@@ -53,8 +53,14 @@ plt.plot(x, x)
 
 mnist = tf.keras.datasets.mnist
 
+img_rows = 28
+img_cols = 28
+
 (x_train, y_train), (x_test, y_test) = datasets.mnist.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0
+
+#x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
+#x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
 
 model = tf.keras.models.Sequential([
   tf.keras.layers.Flatten(input_shape=(28, 28)),
@@ -73,6 +79,62 @@ model.compile(optimizer=optimizer.name,
               loss=loss.name,
               metrics=['accuracy'])
 
-model.fit(x_train, y_train, epochs=3, verbose=1)
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
 
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
+model.evaluate(x_test,  y_test, verbose=1)
+
+model.fit(x_train, y_train, epochs=5, verbose=1)
 model.evaluate(x_test,  y_test, verbose=1)

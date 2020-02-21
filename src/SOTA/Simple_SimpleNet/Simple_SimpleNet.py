@@ -22,6 +22,10 @@ filterSizeS = 64
 filterSizeL = 128
 
 bn_decay = 0.95
+learning_rate = 0.001  #values between 0.001 and 0.00001
+weight_decay = 0.0000005 # it is very small, this is 500 nano, it converges faster the smaller it is, and thus gets stuck later
+
+initial_bias_constant = 0.1
 
 img_rows = 28
 img_cols = 28
@@ -36,92 +40,110 @@ input_shape = (img_rows, img_cols, 1)
 
 model = tf.keras.models.Sequential([
 
-    tf.keras.layers.Conv2D(filterSizeS, (convKernelSize, convKernelSize), padding="same", input_shape=(28, 28, 1), data_format='channels_last'),
-    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Conv2D(filters=filterSizeS, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.MaxPooling2D(strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.MaxPooling2D(strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.MaxPooling2D(strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.MaxPooling2D(strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.MaxPooling2D(strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
-    tf.keras.layers.MaxPooling2D(strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize1, convKernelSize1), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize1, convKernelSize1), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    tf.keras.layers.BatchNormalization(epsilon=0.001, momentum=bn_decay),
     tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
-    tf.keras.layers.Conv2D(filterSizeL, (convKernelSize, convKernelSize), padding="same"),
-    tf.keras.layers.LeakyReLU(alpha=0.1),
+    tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    #tf.keras.layers.LeakyReLU(alpha=0.1),
+    tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
     tf.keras.layers.Flatten(),
-    #tf.keras.layers.Dense(64, activation="relu"),
     tf.keras.layers.Dense(10, activation='softmax')
+
+    #tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=0.1), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
+    #tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
+    #tf.keras.layers.Dropout(rate=conv_dropout),
+
+    #tf.keras.layers.Flatten(),
+    #tf.keras.layers.Dense(10, activation='softmax')
+
+    #tf.keras.layers.GlobalAveragePooling2D(data_format='channels_last')
 ])
 
-loss = Loss.sparse_categorical_crossentropy
-optimizer = Optimizer.Adam
+#loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=model, labels=tf.stop_gradient(y_test)))
+#global_step = tf.Variable(0, name="global_step")
 
-if loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
-    y_train = to_categorical(y_train, 10)
-    y_test = to_categorical(y_test, 10)
 
-model.compile(optimizer=optimizer.name,
-              loss=loss.name,
+#model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate).minimize(loss=loss, var_list=global_step),
+#              metrics=['accuracy'])
+
+model.compile(optimizer=Optimizer.Adam.name,
+              loss=Loss.sparse_categorical_crossentropy.name,
               metrics=['accuracy'])
 
-model.fit(x_train, y_train, epochs=5, verbose=1)
+epochs_run=0
+epochs_pr_it=4
+counter=0
+iterations=20
 
-model.evaluate(x_test,  y_test, verbose=1)
+print("epochs run: " + str(epochs_run))
+while(counter<iterations):
+    model.fit(x_train, y_train, epochs=epochs_pr_it, verbose=1)
+    epochs_run += 4
+    print("epochs run: " + str(epochs_run))
+    model.evaluate(x_test, y_test, verbose=1)
+    print("")
