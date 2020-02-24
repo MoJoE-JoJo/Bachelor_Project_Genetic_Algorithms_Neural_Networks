@@ -1,3 +1,4 @@
+from src.FileWriter import FileWriter
 from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
 from src.Enums.ActivationEnum import Activation
@@ -8,6 +9,12 @@ import tensorflow as tf
 from tensorflow.keras import datasets
 import gc
 
+# path = '../Test/'
+writer = FileWriter('', ['Col1', 'Col2'])
+x = 0
+while x < 5:
+    writer.write_to_file([x, 'test'])
+    x = x + 1
 
 # CONSTANTS
 # Data shape and running
