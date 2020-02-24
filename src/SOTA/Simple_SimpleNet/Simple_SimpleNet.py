@@ -23,7 +23,7 @@ filterSizeL = 128
 
 bn_decay = 0.95
 learning_rate = 0.001  #values between 0.001 and 0.00001
-weight_decay = 0.0000005 # it is very small, this is 500 nano, it converges faster the smaller it is, and thus gets stuck later
+weight_decay = 0.00000005 # it is very small, this is 50 nano, it converges faster the smaller it is, and thus gets stuck later
 
 initial_bias_constant = 0.1
 
@@ -147,3 +147,4 @@ while(counter<iterations):
     print("epochs run: " + str(epochs_run))
     model.evaluate(x_test, y_test, verbose=1)
     print("")
+    counter += 1
