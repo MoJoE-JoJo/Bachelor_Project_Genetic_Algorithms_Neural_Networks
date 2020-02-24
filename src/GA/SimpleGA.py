@@ -2,18 +2,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 # Install TensorFlow
 
-import tensorflow as tf
-import sys
-import collections
-from tensorflow.keras import datasets, layers, models
-import matplotlib.pyplot as plt
-from tensorflow.keras.utils import to_categorical
-from datetime import datetime
-import time
 import random
 import copy
 
-from src.SimpleDNA import SimpleDNA
+from src.DNA.SimpleDNA import SimpleDNA
 
 
 class SimpleGA:
