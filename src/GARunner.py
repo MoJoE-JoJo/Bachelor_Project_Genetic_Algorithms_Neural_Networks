@@ -20,6 +20,7 @@ INPUT_SHAPE = (28, 28)
 OUTPUT_SHAPE = 10
 SCALING = 255.0
 DATASET = datasets.mnist.load_data()
+DATASET_PERCENTAGE = 0.1
 EPOCHS = 5
 MAX_RUNTIME = 60
 
@@ -55,6 +56,13 @@ ga = LonelyGA()
 
 def lonely_ga():
     global ga
+    (x_train, y_train), (x_test, y_test) = DATASET
+    train_slice = (int) (x_train.shape[0]*DATASET_PERCENTAGE)
+    test_slice = (int) (x_test.shape[0]*DATASET_PERCENTAGE)
+    data = (x_train[:train_slice],
+            y_train[:train_slice]), \
+           (x_test[:test_slice],
+            y_test[:test_slice])
     LonelyGA.start(self=ga,
                    input_shape=INPUT_SHAPE,
                    output_shape=OUTPUT_SHAPE,
@@ -65,7 +73,7 @@ def lonely_ga():
                    population_size=POPULATION_SIZE,
                    mutation_rate=MUTATION_RATE,
                    scaling=SCALING,
-                   dataset=DATASET,
+                   dataset=data,
                    epochs=EPOCHS,
                    matingpool=MATINGPOOL)
 
