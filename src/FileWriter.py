@@ -22,3 +22,6 @@ class FileWriter:
     # Write a list of data as a row in the file
     def write_to_file(self, data):
         self.writer.writerow(data)
+
+    def close(self):
+        self.file.close()

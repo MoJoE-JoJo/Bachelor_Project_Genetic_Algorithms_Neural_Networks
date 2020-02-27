@@ -11,7 +11,8 @@ from src.DNA.LonelyDNA import LonelyDNA
 class LonelyGA:
     generation_counter = 0
 
-    def __init__(self, input_shape, output_shape, initial_max_nodes, activation, optimizer, loss, population_size, mutation_rate, dataset, scaling, epochs, matingpool):
+    def __init__(self, notify, input_shape, output_shape, initial_max_nodes, activation, optimizer, loss, population_size, mutation_rate, dataset, scaling, epochs, matingpool):
+        self.notify_data_write = notify
         self.input_shape = input_shape
         self.output_size = output_shape
         self.dataset = dataset
@@ -35,6 +36,8 @@ class LonelyGA:
                           self.population[0].gene.node_count,
                           self.population[0].activation.name,
                           self.population[0].fitness))
+
+            self.notify_data_write(['Generation', self.generation_counter])
 
             self.generation_counter += 1
             fitness = [x.fitness for x in matingpool]

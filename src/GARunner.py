@@ -9,12 +9,8 @@ import tensorflow as tf
 from tensorflow.keras import datasets
 import gc
 
-# path = '../Test/'
-writer = FileWriter('', ['Col1', 'Col2'])
-x = 0
-while x < 5:
-    writer.write_to_file([x, 'test'])
-    x = x + 1
+path = '../Test/'
+writer = FileWriter(path, ['Col1', 'Col2'])
 
 # CONSTANTS
 # Data shape and running
@@ -35,9 +31,19 @@ POPULATION_SIZE = 10
 MATINGPOOL = 10  # Must be between 0 and POPULATION_SIZE
 MUTATION_RATE = 0.3  # Must be between 0 and 1
 
+
+def write_to_file(data):
+    print("Writing")
+    writer.write_to_file(data)
+
+
+write_to_file(['in', 'runner'])
+
+
 print("GA Started")
 gc.enable()
-ga = LonelyGA(input_shape=INPUT_SHAPE,
+ga = LonelyGA(notify=write_to_file,
+              input_shape=INPUT_SHAPE,
               output_shape=OUTPUT_SHAPE,
               initial_max_nodes=INITIAL_MAX_NODES,
               activation=ACTIVATION_FUNCTION,
@@ -50,3 +56,4 @@ ga = LonelyGA(input_shape=INPUT_SHAPE,
               epochs=EPOCHS,
               matingpool=MATINGPOOL)
 
+writer.close()
