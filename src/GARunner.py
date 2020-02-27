@@ -1,3 +1,12 @@
+import os.path
+import sys
+
+import tensorflow as tf
+from tensorflow.keras import datasets
+import gc
+import csv
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from src.FileWriter import FileWriter
 from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
@@ -5,12 +14,32 @@ from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
 
-import tensorflow as tf
-from tensorflow.keras import datasets
-import gc
 
-path = '../Test/'
+# READ FROM FILE
+csv_file = open(sys.argv[1], "r")
+csv_reader = csv.DictReader(csv_file)
+
+line_count = 0
+for row in csv_reader:
+    print(row)
+    # Use row["key_name"] to get specific value
+    line_count += 1
+print(f'Processed {line_count} lines.')
+
+csv_file.close()
+
+# WRITE TO FILE
+path = 'Test/'
 writer = FileWriter(path, ['Col1', 'Col2'])
+
+
+def write_to_file(data):
+    print("Writing")
+    writer.write_to_file(data)
+
+
+write_to_file(['in', 'runner'])
+
 
 # CONSTANTS
 # Data shape and running
@@ -30,15 +59,6 @@ OPTIMIZER = Optimizer.Adam
 POPULATION_SIZE = 10
 MATINGPOOL = 10  # Must be between 0 and POPULATION_SIZE
 MUTATION_RATE = 0.3  # Must be between 0 and 1
-
-
-def write_to_file(data):
-    print("Writing")
-    writer.write_to_file(data)
-
-
-write_to_file(['in', 'runner'])
-
 
 print("GA Started")
 gc.enable()

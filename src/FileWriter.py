@@ -23,5 +23,6 @@ class FileWriter:
     def write_to_file(self, data):
         self.writer.writerow(data)
 
+    # Close the file
     def close(self):
         self.file.close()
