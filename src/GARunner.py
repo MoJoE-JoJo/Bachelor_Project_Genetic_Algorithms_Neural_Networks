@@ -1,4 +1,5 @@
 from threading import Thread
+from multiprocessing import Process
 
 from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
@@ -20,7 +21,7 @@ OUTPUT_SHAPE = 10
 SCALING = 255.0
 DATASET = datasets.mnist.load_data()
 EPOCHS = 5
-MAX_RUNTIME = 60
+MAX_RUNTIME = 120
 
 # Hyper parameters
 ACTIVATION_FUNCTION = Activation.relu
@@ -52,7 +53,6 @@ def initialize_tf():
 
 ga = LonelyGA()
 
-
 def lonely_ga():
     global ga
     LonelyGA.start(self=ga,
@@ -73,24 +73,22 @@ def lonely_ga():
 gc.enable()
 initialize_tf()
 
-
 t = Thread(target=lonely_ga)
+t.daemon = True
 t.start()
+print("GA started")
 
-tc_switch = True
-tc1 = time.perf_counter()
+tc1 = time.time()
 tc2 = 0
 time_elapsed = 0
 
-while(True):
+while True:
     if time_elapsed >= MAX_RUNTIME:
         print("exiting")
         sys.exit()
-    if tc_switch:
-        tc2 = time.perf_counter()
-        time_elapsed += tc2-tc1
-        tc_switch = False
-    if not tc_switch:
-        tc1 = time.perf_counter()
-        time_elapsed += tc1-tc2
-        tc_switch = True
+
+    tc2 = time.time()
+    time_elapsed += tc2-tc1
+    tc1 = time.time()
+
+    time.sleep(5)

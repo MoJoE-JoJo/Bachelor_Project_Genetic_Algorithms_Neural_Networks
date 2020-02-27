@@ -4,6 +4,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import random
 import copy
+import time
+from concurrent.futures.thread import ThreadPoolExecutor
+from threading import Thread
 
 from src.DNA.LonelyDNA import LonelyDNA
 
@@ -30,13 +33,29 @@ class LonelyGA:
         self.population = [LonelyDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate) for i in range(self.population_size)]
         self.evolution()
 
-
     def evolution(self):
+        tc1 = time.time()
         while True:
-            for i in self.population:
-                i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+        #    for i in self.population:
+        #        i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+
+            with ThreadPoolExecutor(max_workers=5) as executor:
+                for i in self.population:
+                    executor.submit(fn=i.fitness_func, input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+                executor.shutdown(wait=True)
+
+
+            #threads = []
+            #for i in self.population:
+            #    threads.append(Thread(target=i.fitness_func, kwargs={'input_shape': self.input_shape, 'output_shape': self.output_size, 'data': self.dataset, 'scaling': self.scaling, 'epochs': self.epochs}))
+            #for i in threads:
+            #    i.start()
+            #    i.join()
+
             self.population.sort(key=lambda x: x.fitness, reverse=True)
             matingpool = copy.deepcopy(self.population[:self.matingpool])
+            print(time.time()-tc1)
+            tc1 = time.time()
             print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Accuracy: {5: .4f}"
                   .format(self.generation_counter,
                           self.population[0].optimizer.name,
