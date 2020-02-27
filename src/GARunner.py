@@ -6,7 +6,7 @@ from tensorflow.keras import datasets
 import gc
 import csv
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
 from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
@@ -16,17 +16,18 @@ from src.Enums.OptimizerEnum import Optimizer
 
 
 # READ FROM FILE
-csv_file = open(sys.argv[1], "r")
-csv_reader = csv.DictReader(csv_file)
+input_file = open(sys.argv[1], "r")
+input_reader = csv.DictReader(input_file)
 
 line_count = 0
-for row in csv_reader:
+for row in input_reader:
     print(row)
     # Use row["key_name"] to get specific value
     line_count += 1
 print(f'Processed {line_count} lines.')
 
-csv_file.close()
+input_file.close()
+
 
 # WRITE TO FILE
 path = 'Test/'
@@ -36,9 +37,6 @@ writer = FileWriter(path, ['Col1', 'Col2'])
 def write_to_file(data):
     print("Writing")
     writer.write_to_file(data)
-
-
-write_to_file(['in', 'runner'])
 
 
 # CONSTANTS
