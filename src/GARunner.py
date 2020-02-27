@@ -9,6 +9,7 @@ from src.Enums.OptimizerEnum import Optimizer
 
 import tensorflow as tf
 from tensorflow.keras import datasets
+import matplotlib.pyplot as plt
 import gc
 import sys
 import time
@@ -23,6 +24,8 @@ DATASET = datasets.mnist.load_data()
 DATASET_PERCENTAGE = 0.1
 EPOCHS = 5
 MAX_RUNTIME = 60
+REPETITIONS = 3
+TEST_NAME = "joe"
 
 # Hyper parameters
 ACTIVATION_FUNCTION = Activation.relu
@@ -50,7 +53,6 @@ def initialize_tf():
                   metrics=['accuracy'])
 
     model.fit(x_train[:10], y_train[:10], epochs=1, verbose=0)
-
 
 ga = LonelyGA()
 
@@ -86,6 +88,52 @@ t.daemon = True
 t.start()
 print("GA started")
 
+def makePlot():
+    ys = []
+    #for i in range(0, REPETITIONS):
+        # ys.append(comp()) # add the data from a single run of an experiment
+
+    #Makes sure that they have the same length, in case some of the repetitions get to make more generations than the rest
+    min_length = float("inf")
+    for i in ys:
+        if len(i)<min_length:
+            min_length = len(i)
+    ys = [i[:min_length] for i in ys]
+
+    # Create y-axis average values
+    y = [0 for n in ys[0]]
+    for i in ys:
+        n=0
+        for j in i:
+            y[n] += j
+            n+=1
+
+    y = [i/REPETITIONS for i in y]
+
+    # Create yerror values
+    yerr = []
+    for i in range(0,len(y)):
+        y_temp = []
+        for j in ys:
+            y_temp.append(j[i])
+        yerr.append((max(y_temp)-min(y_temp))/2)
+
+    x = [val for val in range(0, len(y))]
+
+    fig = plt.figure()
+    subfig = fig.add_subplot(111)
+    subfig.set_ylabel('accuracy')
+    subfig.set_xlabel("epochs")
+    plt.xticks(x)
+
+    subfig.set_title(TEST_NAME)
+    subfig.errorbar(x, y, yerr=yerr)
+
+    plt.savefig(fname=("../test/" + TEST_NAME + "/plot.svg"))
+
+
+
+
 tc1 = time.time()
 tc2 = 0
 time_elapsed = 0
@@ -93,6 +141,7 @@ time_elapsed = 0
 while True:
     if time_elapsed >= MAX_RUNTIME:
         print("exiting")
+        makePlot()
         sys.exit()
 
     tc2 = time.time()

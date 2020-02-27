@@ -45,7 +45,7 @@ from src.Enums.LossEnum import Loss
 #print('print', four - three)
 
 import matplotlib.pyplot as plt
-plt.style.use('ggplot')
+
 
 mnist = tf.keras.datasets.mnist
 
@@ -81,7 +81,7 @@ def comp():
                   loss=loss.name,
                   metrics=['accuracy'])
 
-    hist = model.fit(x_train, y_train, epochs=10, verbose=1)
+    hist = model.fit(x_train, y_train, epochs=5, verbose=1)
     return hist.history['accuracy']
 
 repetitions=3
@@ -108,7 +108,16 @@ for i in range(0,len(y)):
         y_temp.append(j[i])
     yerr.append((max(y_temp)-min(y_temp))/2)
 
-x = [val for val in range(0, len(y))]
-plt.errorbar(x, y, yerr=yerr, label='3 reps')
+x = [val for val in range(1, len(y)+1)]
+
 test_name="joe"
+fig = plt.figure()
+subfig = fig.add_subplot(111)
+subfig.set_ylabel('accuracy')
+subfig.set_xlabel("epochs")
+plt.xticks(x)
+
+subfig.set_title(test_name)
+subfig.errorbar(x, y, yerr=yerr, label='3 reps')
+
 plt.savefig(fname=("../test/"+test_name+"/plot.svg"))
