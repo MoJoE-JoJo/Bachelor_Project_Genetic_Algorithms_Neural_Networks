@@ -84,11 +84,31 @@ def comp():
     hist = model.fit(x_train, y_train, epochs=10, verbose=1)
     return hist.history['accuracy']
 
+repetitions=3
 ys = []
-x = [val for val in range(1, 10)]
-ys.append(comp())
-ys.append(comp())
-ys.append(comp())
-y = [val for val in ]
-yerr = [val for val in ]
-# plt.show()
+for i in range(0, repetitions):
+    ys.append(comp())
+#ys = [[i for i in range(1,10)] for n in range(0,3)]
+
+# Create y-axis average values
+y = [0 for n in ys[0]]
+for i in ys:
+    n=0
+    for j in i:
+        y[n] += j
+        n+=1
+
+y = [i/repetitions for i in y]
+
+# Create yerror values
+yerr = []
+for i in range(0,len(y)):
+    y_temp = []
+    for j in ys:
+        y_temp.append(j[i])
+    yerr.append((max(y_temp)-min(y_temp))/2)
+
+x = [val for val in range(0, len(y))]
+plt.errorbar(x, y, yerr=yerr, label='3 reps')
+test_name="joe"
+plt.savefig(fname=("../test/"+test_name+"/plot.svg"))
