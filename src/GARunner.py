@@ -21,7 +21,7 @@ OUTPUT_SHAPE = 10
 SCALING = 255.0
 DATASET = datasets.mnist.load_data()
 EPOCHS = 5
-MAX_RUNTIME = 120
+MAX_RUNTIME = 60
 
 # Hyper parameters
 ACTIVATION_FUNCTION = Activation.relu

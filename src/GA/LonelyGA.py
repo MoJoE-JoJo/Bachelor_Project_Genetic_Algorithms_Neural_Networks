@@ -36,20 +36,22 @@ class LonelyGA:
     def evolution(self):
         tc1 = time.time()
         while True:
-        #    for i in self.population:
-        #        i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+            for i in self.population:
+                i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
 
-            with ThreadPoolExecutor(max_workers=5) as executor:
-                for i in self.population:
-                    executor.submit(fn=i.fitness_func, input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
-                executor.shutdown(wait=True)
+            #with ThreadPoolExecutor(max_workers=5) as executor:
+            #    for i in self.population:
+            #        executor.submit(fn=i.fitness_func, input_shape=self.input_shape, output_shape=self.output_size, data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+            #    executor.shutdown(wait=True)
 
 
             #threads = []
             #for i in self.population:
             #    threads.append(Thread(target=i.fitness_func, kwargs={'input_shape': self.input_shape, 'output_shape': self.output_size, 'data': self.dataset, 'scaling': self.scaling, 'epochs': self.epochs}))
             #for i in threads:
+            #    i.daemon = True
             #    i.start()
+            #for i in threads:
             #    i.join()
 
             self.population.sort(key=lambda x: x.fitness, reverse=True)
