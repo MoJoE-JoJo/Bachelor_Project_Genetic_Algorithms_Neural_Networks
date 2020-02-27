@@ -84,7 +84,7 @@ def comp():
     hist = model.fit(x_train, y_train, epochs=5, verbose=1)
     return hist.history['accuracy']
 
-repetitions=3
+repetitions=2
 ys = []
 for i in range(0, repetitions):
     ys.append(comp())
@@ -109,6 +109,7 @@ for i in range(0,len(y)):
     yerr.append((max(y_temp)-min(y_temp))/2)
 
 x = [val for val in range(1, len(y)+1)]
+
 
 test_name="joe"
 fig = plt.figure()

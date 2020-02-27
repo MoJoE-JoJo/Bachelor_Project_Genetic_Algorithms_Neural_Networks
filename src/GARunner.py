@@ -120,6 +120,7 @@ def makePlot():
 
     x = [val for val in range(0, len(y))]
 
+    plt.style.use('classic')
     fig = plt.figure()
     subfig = fig.add_subplot(111)
     subfig.set_ylabel('accuracy')
