@@ -7,7 +7,7 @@ from datetime import datetime
 
 class FileWriter:
 
-    def __init__(self, path, col_names):
+    def __init__(self, path, title):
         # Set filename to timestamp and set path
         timestamp = datetime.now().strftime("%d:%m:%Y:%H-%M-%S")
         file_path = path + timestamp + '.csv'
@@ -17,7 +17,7 @@ class FileWriter:
         self.writer = csv.writer(self.file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         # Write column names as first row in file
-        self.writer.writerow(col_names)
+        self.writer.writerow([title, timestamp])
 
     # Write a list of data as a row in the file
     def write_to_file(self, data):

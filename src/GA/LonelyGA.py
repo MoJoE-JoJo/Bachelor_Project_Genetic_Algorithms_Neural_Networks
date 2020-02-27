@@ -37,7 +37,10 @@ class LonelyGA:
                           self.population[0].activation.name,
                           self.population[0].fitness))
 
-            self.notify_data_write(['Generation', self.generation_counter])
+            self.notify_data_write([self.generation_counter,
+                                    self.population[0].gene.node_count,
+                                    self.population[0].fitness,
+                                    self.population[0].history['loss'][-1]])
 
             self.generation_counter += 1
             fitness = [x.fitness for x in matingpool]
