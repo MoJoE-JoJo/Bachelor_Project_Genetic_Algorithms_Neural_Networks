@@ -14,6 +14,7 @@ from src.Genes.SimpleGenes.OverallGene import OverallGene
 # Contains two genes, one overall gene and one dense gene.
 class LonelyDNA:
     fitness = 0.0
+    history = None
 
     def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
         self.initial_max_nodes = initial_max_nodes
@@ -51,3 +52,4 @@ class LonelyDNA:
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
         self.fitness = hist.history['accuracy'][-1]
+        self.history = hist.history

@@ -1,0 +1,2 @@
+folder_name,iterations,input_shape,output_shape,scaling,data_set,epochs,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate
+Test1,1,"(28, 28)",10,255.0,1,5,6,50,6,5,10,10,0.3
