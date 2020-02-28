@@ -9,7 +9,7 @@ class FileWriter:
 
     def __init__(self, path, title):
         # Set filename to timestamp and set path
-        timestamp = datetime.now().strftime("%d:%m:%Y:%H-%M-%S")
+        timestamp = datetime.now().strftime("%d_%m_%Y_%H-%M-%S")
         file_path = path + timestamp + '.csv'
 
         # Create writer
