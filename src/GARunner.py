@@ -165,13 +165,13 @@ for exp in experiments:
     INPUT_SHAPE = make_tuple(exp["input_shape"])
     OUTPUT_SHAPE = int(exp["output_shape"])
     SCALING = float(exp["scaling"])
-    DATASET_PERCENTAGE = 0.1 #TODO read from file
+    DATASET_PERCENTAGE = float(exp["dataset_percentage"])
     if Dataset(int(exp["data_set"])) == Dataset.mnist:
         DATASET = datasets.mnist.load_data()
     else:
         DATASET = datasets.mnist.load_data()
     EPOCHS = int(exp["epochs"])
-    MAX_RUNTIME = 120 #TODO read from file
+    MAX_RUNTIME = int(exp["max_runtime"])
 
     # Hyper parameters
     ACTIVATION_FUNCTION = Activation(int(exp["activation_function"]))
