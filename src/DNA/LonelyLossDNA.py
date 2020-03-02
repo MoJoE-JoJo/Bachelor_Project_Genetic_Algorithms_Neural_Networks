@@ -12,7 +12,7 @@ from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
 # Contains two genes, one overall gene and one dense gene.
-class LonelyDNA:
+class LonelyLossDNA:
     fitness = 0.0
     history = None
     evaluated = 0.0
@@ -52,7 +52,7 @@ class LonelyDNA:
                       metrics=['accuracy'])
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0, validation_split=0.2)
-        self.fitness = hist.history['accuracy'][-1]
+        self.fitness = (1 - hist.history['loss'][-1])
         self.history = hist.history
 
         result = model.evaluate(x_test, y_test, verbose=0)

@@ -16,6 +16,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find m
 from src.FileWriter import FileWriter
 from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
+from src.GA.LonelyLossGA import LonelyLossGA
 from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer

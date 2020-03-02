@@ -7,9 +7,10 @@ import copy
 import time
 
 from src.DNA.LonelyDNA import LonelyDNA
+from src.DNA.LonelyLossDNA import LonelyLossDNA
 
 
-class LonelyGA:
+class LonelyLossGA:
     alive = True
     generation_counter = 0
     notify = None
@@ -34,7 +35,7 @@ class LonelyGA:
         self.population_size = population_size
         self.epochs = epochs
         self.matingpool = matingpool
-        self.population = [LonelyDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate) for i in range(self.population_size)]
+        self.population = [LonelyLossDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate) for i in range(self.population_size)]
         self.evolution()
 
     def evolution(self):
@@ -53,13 +54,13 @@ class LonelyGA:
                                  "accuracy": self.population[0].evaluated["accuracy"],
                                  "nodes": self.population[0].gene.node_count})
 
-            print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Accuracy: {5: .4f}"
+            print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Loss: {5: .4f}"
                   .format(self.generation_counter,
                           self.population[0].optimizer.name,
                           self.population[0].loss.name,
                           self.population[0].gene.node_count,
                           self.population[0].activation.name,
-                          self.population[0].fitness))
+                          1 - self.population[0].fitness))
             if self.alive:
                 self.notify()  # Used to notify GARunner that an update to the history has happened
 
