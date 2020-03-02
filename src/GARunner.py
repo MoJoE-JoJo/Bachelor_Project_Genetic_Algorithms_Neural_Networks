@@ -20,6 +20,7 @@ from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
 from src.Enums.DatasetEnum import Dataset
+from src.SOTA.Simple_SimpleNet.SimpleNet_Runnable import SimpleNet
 
 writer = None
 ga = None
@@ -31,10 +32,16 @@ def write_to_file(data):
 
 def notify():
     global ga
-    writer.write_to_file([ga.history[-1]["generation"],
-                          ga.history[-1]["nodes"],
-                          ga.history[-1]["accuracy"],
-                          ga.history[-1]["loss"]])
+    if ALGORITHM == "SimpleNet":
+        writer.write_to_file([ga.history[-1]["epoch"],
+                              ga.history[-1]["accumulated_time"],
+                              ga.history[-1]["accuracy"],
+                              ga.history[-1]["loss"]])
+    else:
+        writer.write_to_file([ga.history[-1]["generation"],
+                              ga.history[-1]["nodes"],
+                              ga.history[-1]["accuracy"],
+                              ga.history[-1]["loss"]])
 
 
 def lonely_ga():
@@ -45,6 +52,7 @@ def lonely_ga():
            POPULATION_SIZE, MATING_POOL, MUTATION_RATE
 
     (x_train, y_train), (x_test, y_test) = DATASET
+    x_train, x_test = x_train / SCALING, x_test / SCALING
     train_slice = (int)(x_train.shape[0] * DATASET_PERCENTAGE)
     test_slice = (int)(x_test.shape[0] * DATASET_PERCENTAGE)
     data = (x_train[:train_slice],
@@ -65,6 +73,16 @@ def lonely_ga():
              epochs=EPOCHS,
              matingpool=MATING_POOL,
              notify=notify)
+
+
+def simple_net():
+    global experiments, writer, ga,\
+           FOLDER_NAME, REPETITIONS, \
+           INPUT_SHAPE, OUTPUT_SHAPE, SCALING, DATASET_PERCENTAGE, DATASET, EPOCHS, MAX_RUNTIME, \
+           ACTIVATION_FUNCTION, INITIAL_MAX_NODES, LOSS_FUNCTION, OPTIMIZER, \
+           POPULATION_SIZE, MATING_POOL, MUTATION_RATE
+
+    ga.start(notify=notify)
 
 
 def initialize_tf():
@@ -96,46 +114,82 @@ def make_plot(data):
     #Makes sure that they have the same length, in case some of the repetitions get to make more generations than the rest
     min_length = float("inf")
     for i in ys:
-        if len(i)<min_length:
+        if len(i) < min_length:
             min_length = len(i)
     ys = [i[:min_length] for i in ys]
 
     # Create y-axis average values
-    y = [0 for n in ys[0]]
+    y_acc = [0 for n in ys[0]]
+    y_los = [0 for n in ys[0]]
     for i in ys:
         n=0
         for j in i:
-            y[n] += j["accuracy"]
+            y_acc[n] += j["accuracy"]
+            y_los[n] += j["loss"]
             n+=1
 
-    y = [i/REPETITIONS for i in y]
+    y_acc = [i/REPETITIONS for i in y_acc]
+    y_los = [i/REPETITIONS for i in y_los]
 
     # Create yerror values
-    yerr = []
-    for i in range(0,len(y)):
-        y_temp = []
+    yerr_acc = []
+    yerr_los = []
+    for i in range(0,len(y_acc)):
+        y_temp_acc = []
+        y_temp_los = []
         for j in ys:
-            y_temp.append(j[i]['accuracy'])
-        yerr.append((max(y_temp)-min(y_temp))/2)
-
-    x = [val for val in range(0, len(y))]
+            y_temp_acc.append(j[i]['accuracy'])
+            y_temp_los.append(j[i]['loss'])
+        yerr_acc.append((max(y_temp_acc)-min(y_temp_acc))/2)
+        yerr_los.append((max(y_temp_los)-min(y_temp_los))/2)
 
     plt.style.use('classic')
-    fig = plt.figure()
-    subfig = fig.add_subplot(111)
-    subfig.set_ylabel('accuracy')
-    subfig.set_xlabel("generation")
-    plt.xticks(x)
-    plt.xlim(min(x)-0.1, max(x)+0.1)
 
-    subfig.set_title(FOLDER_NAME)
-    subfig.errorbar(x, y, yerr=yerr)
+    fig, (ax_acc, ax_los) = plt.subplots(2)
+    fig.suptitle(FOLDER_NAME)
+
+#    ax_acc.errorbar()
+ #   ax_los.plot(x, -y)
+
+
+  #  fig = plt.figure()
+   # subfig1 = fig.add_subplot(111)
+    #subfig2 = fig.add_subplot(211)
+    #subfig1.set_ylabel('accuracy')
+    #subfig2.set_ylabel('loss')
+
+    if ALGORITHM == "SimpleNet":
+        x = [val for val in range(1, len(y_acc)+1)]
+        ax_acc.set(xlabel='', ylabel='accuracy')
+        ax_los.set(xlabel='epoch', ylabel='loss')
+    else:
+        x = [val for val in range(0, len(y_acc))]
+        ax_acc.set(xlabel='', ylabel='accuracy')
+        ax_los.set(xlabel='generation', ylabel='loss')
+
+    #ax_acc.label_outer()
+    #ax_los.label_outer()
+
+    ax_acc.set_xticks(x)
+    ax_acc.set_xlim(min(x)-0.1, max(x)+0.1)
+    ax_acc.locator_params(axis='x', nbins=10)
+
+    ax_los.set_xticks(x)
+    ax_los.set_xlim(min(x) - 0.1, max(x) + 0.1)
+    ax_los.locator_params(axis='x', nbins=10)
+
+    #subfig1.set_title(FOLDER_NAME)
+    ax_acc.errorbar(x, y_acc, yerr=yerr_acc)
+    ax_los.errorbar(x, y_los, yerr=yerr_los)
 
     plt.savefig(fname=(path + "plot.svg"))
 
 
 def choose_GA():
-    return LonelyGA()
+    if ALGORITHM == "SimpleNet":
+        return  SimpleNet()
+    elif ALGORITHM == "Lonely_GA":
+        return LonelyGA()
 
 
 gc.enable()
@@ -183,6 +237,7 @@ for exp in experiments:
     POPULATION_SIZE = int(exp["population_size"])
     MATING_POOL = int(exp["mating_pool"])  # Must be between 0 and POPULATION_SIZE
     MUTATION_RATE = float(exp["mutation_rate"])  # Must be between 0 and 1
+    ALGORITHM = str(exp["algorithm"])
 
     experiment_data = []
     # RUN REPETITIONS
@@ -212,34 +267,27 @@ for exp in experiments:
 
         writer.write_to_file(['OUTPUT'])
 
-        writer.write_to_file(['generation_no', 'neurons_no', 'accuracy', 'loss'])
+        if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
+            writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
+        else:
+            writer.write_to_file(['generation_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
-        t = Thread(target=lonely_ga)
-        t.daemon = True
-        t.start()
-        t.join(MAX_RUNTIME)
-        ga.alive = False
+        if ALGORITHM == "Lonely_GA":
+            t = Thread(target=lonely_ga)
+            t.daemon = True
+            t.start()
+            t.join(MAX_RUNTIME)
+            ga.alive = False
+            experiment_data.append(ga.history)
 
-        experiment_data.append(ga.history)
+        if ALGORITHM == "SimpleNet":
+            t = Thread(target=simple_net)
+            t.daemon = True
+            t.start()
+            t.join()
+            experiment_data.append(ga.history)
 
         writer.close()
     make_plot(experiment_data)
 
-
-#tc1 = time.time()
-#tc2 = 0
-#time_elapsed = 0
-
-
-#while True:
-#    if time_elapsed >= MAX_RUNTIME:
-#        print("exiting")
-#        make_plot()
-#        sys.exit()
-
-#    tc2 = time.time()
-#    time_elapsed += tc2-tc1
-#    tc1 = time.time()
-
-#    time.sleep(5)
