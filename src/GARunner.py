@@ -148,16 +148,6 @@ def make_plot(data):
     fig, (ax_acc, ax_los) = plt.subplots(2)
     fig.suptitle(FOLDER_NAME)
 
-#    ax_acc.errorbar()
- #   ax_los.plot(x, -y)
-
-
-  #  fig = plt.figure()
-   # subfig1 = fig.add_subplot(111)
-    #subfig2 = fig.add_subplot(211)
-    #subfig1.set_ylabel('accuracy')
-    #subfig2.set_ylabel('loss')
-
     if ALGORITHM == "SimpleNet":
         x = [val for val in range(1, len(y_acc)+1)]
         ax_acc.set(xlabel='', ylabel='accuracy')
@@ -167,9 +157,6 @@ def make_plot(data):
         ax_acc.set(xlabel='', ylabel='accuracy')
         ax_los.set(xlabel='generation', ylabel='loss')
 
-    #ax_acc.label_outer()
-    #ax_los.label_outer()
-
     ax_acc.set_xticks(x)
     ax_acc.set_xlim(min(x)-0.1, max(x)+0.1)
     ax_acc.locator_params(axis='x', nbins=10)
@@ -178,7 +165,6 @@ def make_plot(data):
     ax_los.set_xlim(min(x) - 0.1, max(x) + 0.1)
     ax_los.locator_params(axis='x', nbins=10)
 
-    #subfig1.set_title(FOLDER_NAME)
     ax_acc.errorbar(x, y_acc, yerr=yerr_acc)
     ax_los.errorbar(x, y_los, yerr=yerr_los)
 
