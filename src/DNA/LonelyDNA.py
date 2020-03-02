@@ -15,6 +15,7 @@ from src.Genes.SimpleGenes.OverallGene import OverallGene
 class LonelyDNA:
     fitness = 0.0
     history = None
+    evaluated = 0.0
 
     def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
         self.initial_max_nodes = initial_max_nodes
@@ -50,6 +51,9 @@ class LonelyDNA:
                       loss=self.loss.name,
                       metrics=['accuracy'])
 
-        hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
+        hist = model.fit(x_train, y_train, epochs=epochs, verbose=0, validation_split=0.2)
         self.fitness = hist.history['accuracy'][-1]
         self.history = hist.history
+
+        result = model.evaluate(x_test, y_test, verbose=0)
+        self.evaluated = dict(zip(model.metrics_names, result))

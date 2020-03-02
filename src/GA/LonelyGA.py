@@ -46,7 +46,13 @@ class LonelyGA:
             matingpool = copy.deepcopy(self.population[:self.matingpool])
             print(time.time()-tc1)
             tc1 = time.time()
-            self.history.append({"generation": self.generation_counter, "loss": self.population[0].history['loss'][-1], "accuracy": self.population[0].fitness, "nodes": self.population[0].gene.node_count})  # Used to update the history of the genetic algorithm
+
+            # Used to update the history of the genetic algorithm
+            self.history.append({"generation": self.generation_counter,
+                                 "loss": self.population[0].evaluated["loss"],
+                                 "accuracy": self.population[0].evaluated["accuracy"],
+                                 "nodes": self.population[0].gene.node_count})
+
             print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Accuracy: {5: .4f}"
                   .format(self.generation_counter,
                           self.population[0].optimizer.name,
