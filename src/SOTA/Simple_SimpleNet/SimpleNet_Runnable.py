@@ -133,7 +133,7 @@ class SimpleNet:
         epochs_run = 0
         epochs_pr_it = 1
         counter = 1
-        iterations = 5
+        iterations = 2
         timer = 0
 
         tc1 = time.time()

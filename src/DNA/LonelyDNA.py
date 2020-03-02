@@ -51,7 +51,7 @@ class LonelyDNA:
                       loss=self.loss.name,
                       metrics=['accuracy'])
 
-        hist = model.fit(x_train, y_train, epochs=epochs, verbose=0, validation_split=0.2)
+        hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
         self.fitness = hist.history['accuracy'][-1]
         self.history = hist.history
 

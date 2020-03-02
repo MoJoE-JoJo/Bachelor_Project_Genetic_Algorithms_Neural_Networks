@@ -158,6 +158,13 @@ def make_plot(data):
         ax_acc.set(xlabel='', ylabel='accuracy')
         ax_los.set(xlabel='generation', ylabel='loss')
 
+    x_bl = list(x)
+    x_bl.insert(0, (min(x)-1))
+    x_bl.append (max(x) + 1)
+    y_bl_acc = [0.95 for val in x_bl]
+    y_bl_los = [0.95 for val in x_bl]
+    yerr_bl = [0 for val in y_bl_acc]
+
     ax_acc.set_xticks(x)
     ax_acc.set_xlim(min(x)-0.1, max(x)+0.1)
     ax_acc.locator_params(axis='x', nbins=10)
@@ -167,16 +174,20 @@ def make_plot(data):
     ax_los.locator_params(axis='x', nbins=10)
 
     ax_acc.errorbar(x, y_acc, yerr=yerr_acc)
+    ax_acc.errorbar(x_bl, y_bl_acc, yerr=yerr_bl)
     ax_los.errorbar(x, y_los, yerr=yerr_los)
+    ax_acc.errorbar(x_bl, y_bl_los, yerr=yerr_bl)
 
     plt.savefig(fname=(path + "plot.svg"))
 
 
 def choose_GA():
     if ALGORITHM == "SimpleNet":
-        return  SimpleNet()
+        return SimpleNet()
     elif ALGORITHM == "Lonely_GA":
         return LonelyGA()
+    elif ALGORITHM == "Lonely_Loss_GA":
+        return LonelyLossGA()
 
 
 gc.enable()
@@ -261,6 +272,14 @@ for exp in experiments:
 
         ga = choose_GA()
         if ALGORITHM == "Lonely_GA":
+            t = Thread(target=lonely_ga)
+            t.daemon = True
+            t.start()
+            t.join(MAX_RUNTIME)
+            ga.alive = False
+            experiment_data.append(ga.history)
+
+        if ALGORITHM == "Lonely_Loss_GA":
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()
