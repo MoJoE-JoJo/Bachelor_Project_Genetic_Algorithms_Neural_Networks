@@ -40,6 +40,7 @@ def notify():
                               ga.history[-1]["loss"]])
     else:
         writer.write_to_file([ga.history[-1]["generation"],
+                              ga.history[-1]["params"],
                               ga.history[-1]["nodes"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
@@ -275,7 +276,7 @@ for exp in experiments:
         if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
         else:
-            writer.write_to_file(['generation_no', 'neurons_no', 'accuracy', 'loss'])
+            writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
         if ALGORITHM == "Lonely_GA":

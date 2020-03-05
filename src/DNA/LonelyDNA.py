@@ -3,7 +3,7 @@ import gc
 import tensorflow as tf
 from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
-from numba import cuda
+# from numba import cuda
 
 import random
 from src.Enums.ActivationEnum import Activation
@@ -19,6 +19,7 @@ class LonelyDNA:
     fitness = 0.0
     history = None
     evaluated = 0.0
+    num_params = 0
 
     def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
         gc.enable()
@@ -58,6 +59,7 @@ class LonelyDNA:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
         self.fitness = hist.history['accuracy'][-1]
         self.history = hist.history
+        self.num_params = model.count_params()
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

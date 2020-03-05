@@ -7,7 +7,7 @@ import copy
 import time
 import gc
 
-from numba import cuda
+# from numba import cuda
 import tensorflow as tf
 from src.DNA.LonelyDNA import LonelyDNA
 
@@ -56,18 +56,20 @@ class LonelyGA:
                 print(time.time() - tc1)
                 tc1 = time.time()
 
-                print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Accuracy: {5: .4f}"
+                print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Accuracy: {5: .4f}, Params: {6}"
                       .format(self.generation_counter,
                               self.population[0].optimizer.name,
                               self.population[0].loss.name,
                               self.population[0].gene.node_count,
                               self.population[0].activation.name,
-                              self.population[0].fitness))
+                              self.population[0].fitness,
+                              self.population[0].num_params))
 
                 self.history.append({"generation": self.generation_counter,
                                      "loss": self.population[0].evaluated["loss"],
                                      "accuracy": self.population[0].evaluated["accuracy"],
-                                     "nodes": self.population[0].gene.node_count})
+                                     "nodes": self.population[0].gene.node_count,
+                                     "params": self.population[0].num_params})
                 self.notify()  # Used to notify GARunner that an update to the history has happened
 
                 self.generation_counter += 1
