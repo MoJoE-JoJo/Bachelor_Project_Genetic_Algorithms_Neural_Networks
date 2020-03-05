@@ -53,7 +53,6 @@ def lonely_ga():
            POPULATION_SIZE, MATING_POOL, MUTATION_RATE
 
     (x_train, y_train), (x_test, y_test) = DATASET
-    x_train, x_test = x_train / SCALING, x_test / SCALING
     train_slice = (int)(x_train.shape[0] * DATASET_PERCENTAGE)
     test_slice = (int)(x_test.shape[0] * DATASET_PERCENTAGE)
     data = (x_train[:train_slice],
@@ -158,11 +157,14 @@ def make_plot(data):
         ax_acc.set(xlabel='', ylabel='accuracy')
         ax_los.set(xlabel='generation', ylabel='loss')
 
+    acc_bl_val= 0.984 # Found as the averages of epoch 25-80 of SimpleNet baseline
+    los_bl_val = 0.0896 # Found as the averages of epoch 25-80 of SimpleNet baseline
+
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
-    x_bl.append (max(x) + 1)
-    y_bl_acc = [0.95 for val in x_bl]
-    y_bl_los = [0.95 for val in x_bl]
+    x_bl.append(max(x) + 1)
+    y_bl_acc = [acc_bl_val for val in x_bl]
+    y_bl_los = [los_bl_val for val in x_bl]
     yerr_bl = [0 for val in y_bl_acc]
 
     ax_acc.set_xticks(x)
@@ -174,9 +176,11 @@ def make_plot(data):
     ax_los.locator_params(axis='x', nbins=10)
 
     ax_acc.errorbar(x, y_acc, yerr=yerr_acc)
-    ax_acc.errorbar(x_bl, y_bl_acc, yerr=yerr_bl)
     ax_los.errorbar(x, y_los, yerr=yerr_los)
-    ax_acc.errorbar(x_bl, y_bl_los, yerr=yerr_bl)
+
+    if ALGORITHM != 'SimpleNet':
+        ax_acc.errorbar(x_bl, y_bl_acc, yerr=yerr_bl)
+        ax_los.errorbar(x_bl, y_bl_los, yerr=yerr_bl)
 
     plt.savefig(fname=(path + "plot.svg"))
 
@@ -248,6 +252,9 @@ for exp in experiments:
         writer.write_to_file(['output_shape ', OUTPUT_SHAPE])
         writer.write_to_file(['scaling ', SCALING])
         writer.write_to_file(['epochs ', EPOCHS])
+        writer.write_to_file(['max_runtime', MAX_RUNTIME])
+        writer.write_to_file(['dataset_percentage', DATASET_PERCENTAGE])
+        writer.write_to_file(['dataset', Dataset(int(exp["data_set"])).name])
         writer.write_to_file([])
 
         writer.write_to_file(['Hyper parameters'])

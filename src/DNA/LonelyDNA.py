@@ -1,6 +1,9 @@
+import gc
+
 import tensorflow as tf
 from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
+from numba import cuda
 
 import random
 from src.Enums.ActivationEnum import Activation
@@ -18,6 +21,7 @@ class LonelyDNA:
     evaluated = 0.0
 
     def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
+        gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
