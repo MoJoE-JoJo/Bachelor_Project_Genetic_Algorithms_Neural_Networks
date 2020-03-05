@@ -133,16 +133,22 @@ def make_plot(data):
     y_los = [i/REPETITIONS for i in y_los]
 
     # Create yerror values
-    yerr_acc = []
-    yerr_los = []
+    yerr_acc = [[] for i in range(0,2)]
+    yerr_los = [[] for i in range(0,2)]
     for i in range(0,len(y_acc)):
         y_temp_acc = []
         y_temp_los = []
         for j in ys:
             y_temp_acc.append(j[i]['accuracy'])
             y_temp_los.append(j[i]['loss'])
-        yerr_acc.append((max(y_temp_acc)-min(y_temp_acc))/2)
-        yerr_los.append((max(y_temp_los)-min(y_temp_los))/2)
+
+        yerr_acc[0].append(y_acc[i]-min(y_temp_acc))
+        yerr_acc[1].append(max(y_temp_acc)-y_acc[i])
+
+        yerr_los[0].append(y_los[i]-min(y_temp_los))
+        yerr_los[1].append(max(y_temp_los)-y_los[i])
+        #yerr_acc.append((max(y_temp_acc)-min(y_temp_acc))/2)
+        #yerr_los.append((max(y_temp_los)-min(y_temp_los))/2)
 
     plt.style.use('classic')
 
