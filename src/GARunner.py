@@ -122,47 +122,56 @@ def make_plot(data):
     # Create y-axis average values
     y_acc = [0 for n in ys[0]]
     y_los = [0 for n in ys[0]]
+    y_params = [0 for n in ys[0]]
     for i in ys:
         n=0
         for j in i:
             y_acc[n] += j["accuracy"]
             y_los[n] += j["loss"]
+            y_params[n] += j["params"]
             n+=1
 
     y_acc = [i/REPETITIONS for i in y_acc]
     y_los = [i/REPETITIONS for i in y_los]
+    y_params = [i / REPETITIONS for i in y_params]
 
     # Create yerror values
     yerr_acc = [[] for i in range(0,2)]
     yerr_los = [[] for i in range(0,2)]
+    yerr_params = [[] for i in range(0, 2)]
     for i in range(0,len(y_acc)):
         y_temp_acc = []
         y_temp_los = []
+        y_temp_params = []
         for j in ys:
             y_temp_acc.append(j[i]['accuracy'])
             y_temp_los.append(j[i]['loss'])
+            y_temp_params.append(j[i]['params'])
 
         yerr_acc[0].append(y_acc[i]-min(y_temp_acc))
         yerr_acc[1].append(max(y_temp_acc)-y_acc[i])
 
         yerr_los[0].append(y_los[i]-min(y_temp_los))
         yerr_los[1].append(max(y_temp_los)-y_los[i])
-        #yerr_acc.append((max(y_temp_acc)-min(y_temp_acc))/2)
-        #yerr_los.append((max(y_temp_los)-min(y_temp_los))/2)
+
+        yerr_params[0].append(y_params[i] - min(y_temp_params))
+        yerr_params[1].append(max(y_temp_params) - y_params[i])
 
     plt.style.use('classic')
 
-    fig, (ax_acc, ax_los) = plt.subplots(2)
+    fig, (ax_acc, ax_los, ax_params) = plt.subplots(3, figsize=(8, 10))
     fig.suptitle(FOLDER_NAME)
 
     if ALGORITHM == "SimpleNet":
         x = [val for val in range(1, len(y_acc)+1)]
         ax_acc.set(xlabel='', ylabel='accuracy')
         ax_los.set(xlabel='epoch', ylabel='loss')
+        ax_params.set(xlabel='generation', ylabel='parameters')
     else:
         x = [val for val in range(0, len(y_acc))]
         ax_acc.set(xlabel='', ylabel='accuracy')
-        ax_los.set(xlabel='generation', ylabel='loss')
+        ax_los.set(xlabel='', ylabel='loss')
+        ax_params.set(xlabel='generation', ylabel='parameters')
 
     acc_bl_val= 0.984 # Found as the averages of epoch 25-80 of SimpleNet baseline
     los_bl_val = 0.0896 # Found as the averages of epoch 25-80 of SimpleNet baseline
@@ -182,8 +191,13 @@ def make_plot(data):
     ax_los.set_xlim(min(x) - 0.1, max(x) + 0.1)
     ax_los.locator_params(axis='x', nbins=10)
 
+    ax_params.set_xticks(x)
+    ax_params.set_xlim(min(x) - 0.1, max(x) + 0.1)
+    ax_params.locator_params(axis='x', nbins=10)
+
     ax_acc.errorbar(x, y_acc, yerr=yerr_acc)
     ax_los.errorbar(x, y_los, yerr=yerr_los)
+    ax_params.errorbar(x, y_params, yerr=yerr_params)
 
     if ALGORITHM != 'SimpleNet':
         ax_acc.errorbar(x_bl, y_bl_acc, yerr=yerr_bl)

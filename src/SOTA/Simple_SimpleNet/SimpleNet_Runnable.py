@@ -145,7 +145,7 @@ class SimpleNet:
             timer += time.time()-tc1
             tc1 = time.time()
 
-            self.history.append({"epoch": counter, "loss": hist[0], "accuracy": hist[1], "accumulated_time": timer})
+            self.history.append({"epoch": counter, "loss": hist[0], "accuracy": hist[1], "accumulated_time": timer, "params": self.model.count_params()})
             counter += 1
             notify()
 
