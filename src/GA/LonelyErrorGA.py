@@ -9,8 +9,8 @@ import gc
 
 # from numba import cuda
 import tensorflow as tf
-from src.DNA.LonelyErrorDNA import LonelyErrorDNA
-from src.DNA.LonelyErrorDNAPS import LonelyErrorDNAPS
+from src.DNA.LonelyError.LonelyErrorDNA import LonelyErrorDNA
+from src.DNA.LonelyError.LonelyErrorDNAPS import LonelyErrorDNAPS
 
 
 class LonelyErrorGA:

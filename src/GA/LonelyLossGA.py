@@ -7,8 +7,8 @@ import copy
 import time
 import tensorflow as tf
 
-from src.DNA.LonelyLossDNA import LonelyLossDNA
-from src.DNA.LonelyLossDNAPS import LonelyLossDNAPS
+from src.DNA.LonelyLoss.LonelyLossDNA import LonelyLossDNA
+from src.DNA.LonelyLoss.LonelyLossDNAPS import LonelyLossDNAPS
 
 
 class LonelyLossGA:

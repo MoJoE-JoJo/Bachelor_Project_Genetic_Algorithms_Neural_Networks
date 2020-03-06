@@ -9,9 +9,9 @@ import gc
 
 # from numba import cuda
 import tensorflow as tf
-from src.DNA.LonelyDNA import LonelyDNA
-from src.DNA.LonelyDNAPS import LonelyDNAPS
-from src.DNA.LonelyDNAValidation import LonelyDNAValidation
+from src.DNA.LonelyAccuracy.LonelyDNA import LonelyDNA
+from src.DNA.LonelyAccuracy.LonelyDNAPS import LonelyDNAPS
+from src.DNA.LonelyAccuracy.LonelyDNAValidation import LonelyDNAValidation
 
 
 class LonelyGA:
