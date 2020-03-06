@@ -10,6 +10,9 @@ import gc
 # from numba import cuda
 import tensorflow as tf
 from src.DNA.LonelyDNA import LonelyDNA
+from src.DNA.LonelyDNAASPS import LonelyDNAASPS
+from src.DNA.LonelyDNAPS import LonelyDNAPS
+from src.DNA.LonelyDNAValidation import LonelyDNAValidation
 
 
 class LonelyGA:
@@ -26,6 +29,9 @@ class LonelyGA:
     population = []
     history = []
 
+    def __init__(self, t):
+        self.GA_type = t
+
     def start(self, input_shape, output_shape, initial_max_nodes, activation, optimizer, loss, population_size, mutation_rate, dataset, scaling, epochs, matingpool, notify):
         gc.enable()
         self.generation_counter = 0
@@ -39,7 +45,31 @@ class LonelyGA:
         self.epochs = epochs
         self.matingpool = matingpool
         self.population = []
-        self.population = [LonelyDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate) for i in range(self.population_size)]
+
+        if self.GA_type == "Lonely_GA":
+            self.population = [LonelyDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Validation":
+            self.population = [LonelyDNAValidation(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_ASPS_01":
+            self.population = [LonelyDNAASPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_ASPS_05":
+            self.population = [LonelyDNAASPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.5)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_PS_01":
+            self.population = [LonelyDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_PS_05":
+            self.population = [LonelyDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.5)
+                               for i in range(self.population_size)]
+
         self.evolution()
 
     def evolution(self):

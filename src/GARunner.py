@@ -203,10 +203,14 @@ def make_plot(data):
 def choose_GA():
     if ALGORITHM == "SimpleNet":
         return SimpleNet()
-    elif ALGORITHM == "Lonely_GA":
-        return LonelyGA()
-    elif ALGORITHM == "Lonely_Loss_GA":
-        return LonelyLossGA()
+    # Lonely_GA variations
+    elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_ASPS_01",
+                       "Lonely_GA_ASPS_05", "Lonely_GA_PS_01", "Lonely_GA_PS_05"]:
+        return LonelyGA(ALGORITHM)
+    # Lonely_Loss_GA variations
+    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_Validation", "Lonely_Loss_GA_ASPS_01",
+                       "Lonely_Loss_GA_ASPS_05", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_05"]:
+        return LonelyLossGA(ALGORITHM)
 
 
 gc.enable()

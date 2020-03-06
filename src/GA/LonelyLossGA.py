@@ -7,8 +7,10 @@ import copy
 import time
 import tensorflow as tf
 
-from src.DNA.LonelyDNA import LonelyDNA
 from src.DNA.LonelyLossDNA import LonelyLossDNA
+from src.DNA.LonelyLossDNALSPS import LonelyLossDNALSPS
+from src.DNA.LonelyLossDNAPS import LonelyLossDNAPS
+from src.DNA.LonelyLossDNAValidation import LonelyLossDNAValidation
 
 
 class LonelyLossGA:
@@ -25,6 +27,9 @@ class LonelyLossGA:
     population = []
     history = []
 
+    def __init__(self, t):
+        self.GA_type = t
+
     def start(self, input_shape, output_shape, initial_max_nodes, activation, optimizer, loss, population_size, mutation_rate, dataset, scaling, epochs, matingpool, notify):
         gc.enable()
         self.generation_counter = 0
@@ -38,7 +43,31 @@ class LonelyLossGA:
         self.epochs = epochs
         self.matingpool = matingpool
         self.population = []
-        self.population = [LonelyLossDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate) for i in range(self.population_size)]
+
+        if self.GA_type == "Lonely_Loss_GA":
+            self.population = [LonelyLossDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_Validation":
+            self.population = [LonelyLossDNAValidation(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_ASPS_01":
+            self.population = [LonelyLossDNALSPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_ASPS_05":
+            self.population = [LonelyLossDNALSPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.5)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_PS_01":
+            self.population = [LonelyLossDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_PS_05":
+            self.population = [LonelyLossDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.5)
+                               for i in range(self.population_size)]
+
         self.evolution()
 
     def evolution(self):
@@ -71,7 +100,6 @@ class LonelyLossGA:
                               1 - self.population[0].fitness))
 
                 self.notify()  # Used to notify GARunner that an update to the history has happened
-
 
                 self.generation_counter += 1
                 fitness = [x.fitness for x in matingpool]

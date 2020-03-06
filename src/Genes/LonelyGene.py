@@ -5,7 +5,7 @@ import random
 
 
 class LonelyGene:
-    __low_node_percentage = 0.75
+    __low_node_percentage = 0.5
     __high_node_percentage = 1.5
 
     def __init__(self, nodes):
