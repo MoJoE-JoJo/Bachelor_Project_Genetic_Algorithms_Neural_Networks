@@ -136,9 +136,9 @@ def make_plot(data):
     y_params = [i / REPETITIONS for i in y_params]
 
     # Create yerror values
-    yerr_acc = []
-    yerr_los = []
-    yerr_params = []
+    yerr_acc = [[] for i in range(0,2)]
+    yerr_los = [[] for i in range(0,2)]
+    yerr_params = [[] for i in range(0, 2)]
     for i in range(0,len(y_acc)):
         y_temp_acc = []
         y_temp_los = []
@@ -147,9 +147,15 @@ def make_plot(data):
             y_temp_acc.append(j[i]['accuracy'])
             y_temp_los.append(j[i]['loss'])
             y_temp_params.append(j[i]['params'])
-        yerr_acc.append((max(y_temp_acc)-min(y_temp_acc))/2)
-        yerr_los.append((max(y_temp_los)-min(y_temp_los))/2)
-        yerr_params.append((max(y_temp_params) - min(y_temp_params)) / 2)
+
+        yerr_acc[0].append(y_acc[i]-min(y_temp_acc))
+        yerr_acc[1].append(max(y_temp_acc)-y_acc[i])
+
+        yerr_los[0].append(y_los[i]-min(y_temp_los))
+        yerr_los[1].append(max(y_temp_los)-y_los[i])
+
+        yerr_params[0].append(y_params[i] - min(y_temp_params))
+        yerr_params[1].append(max(y_temp_params) - y_params[i])
 
     plt.style.use('classic')
 

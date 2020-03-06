@@ -134,6 +134,7 @@ model = tf.keras.models.Sequential([
 model.compile(optimizer=Optimizer.Adam.name,
               loss=Loss.sparse_categorical_crossentropy.name,
               metrics=['accuracy'])
+print(model.count_params())
 
 epochs_run=0
 epochs_pr_it=4
