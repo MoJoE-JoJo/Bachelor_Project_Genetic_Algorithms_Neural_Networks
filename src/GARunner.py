@@ -303,7 +303,9 @@ for exp in experiments:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
-        if ALGORITHM == "Lonely_GA":
+
+        if ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_ASPS_01", "Lonely_GA_ASPS_05",
+                         "Lonely_GA_PS_01", "Lonely_GA_PS_05"]:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()
@@ -311,7 +313,8 @@ for exp in experiments:
             ga.alive = False
             experiment_data.append(ga.history)
 
-        if ALGORITHM == "Lonely_Loss_GA":
+        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_Validation", "Lonely_Loss_GA_ASPS_01",
+                         "Lonely_Loss_GA_ASPS_05", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_05"]:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()
