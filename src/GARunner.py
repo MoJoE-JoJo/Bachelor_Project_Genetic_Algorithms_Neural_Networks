@@ -16,10 +16,7 @@ import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
-from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
-from src.GA.LonelyErrorGA import LonelyErrorGA
-from src.GA.LonelyLossGA import LonelyLossGA
 from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
@@ -213,14 +210,8 @@ def choose_GA():
     if ALGORITHM == "SimpleNet":
         return SimpleNet()
     # Lonely_GA variations
-    elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
+    elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation"]:
         return LonelyGA(ALGORITHM)
-    # Lonely_Loss_GA variations
-    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033"]:
-        return LonelyLossGA(ALGORITHM)
-    # Lonely_Error_GA variations
-    elif ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
-        return LonelyErrorGA(ALGORITHM)
 
 
 gc.enable()
@@ -308,23 +299,7 @@ for exp in experiments:
 
         ga = choose_GA()
 
-        if ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
-            t = Thread(target=lonely_ga)
-            t.daemon = True
-            t.start()
-            t.join(MAX_RUNTIME)
-            ga.alive = False
-            experiment_data.append(ga.history)
-
-        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033"]:
-            t = Thread(target=lonely_ga)
-            t.daemon = True
-            t.start()
-            t.join(MAX_RUNTIME)
-            ga.alive = False
-            experiment_data.append(ga.history)
-
-        if ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
+        if ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation"]:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()

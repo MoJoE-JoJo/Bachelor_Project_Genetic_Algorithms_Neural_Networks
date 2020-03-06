@@ -1,7 +1,7 @@
 import random
 
-# A class to hold the hyperparameters for a dense layer that can be modified,
-# these being the number of nodes in the layer and the activation function
+# A class to hold the hyperparameter for a dense layer that can be modified,
+# this being the number of nodes in the layer
 
 
 class LonelyGene:

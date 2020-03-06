@@ -1,7 +1,6 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # Install TensorFlow
-
 import random
 import copy
 import time
@@ -10,10 +9,9 @@ import gc
 # from numba import cuda
 import tensorflow as tf
 from src.DNA.LonelyDNA import LonelyDNA
-from src.DNA.LonelyDNAPS import LonelyDNAPS
 from src.DNA.LonelyDNAValidation import LonelyDNAValidation
 
-
+# A simple genetic algorithm with probabilistic asexual reproduction
 class LonelyGA:
     alive = True
     generation_counter = 0
@@ -51,14 +49,6 @@ class LonelyGA:
 
         elif self.GA_type == "Lonely_GA_Validation":
             self.population = [LonelyDNAValidation(initial_max_nodes, activation, optimizer, loss, mutation_rate)
-                               for i in range(self.population_size)]
-
-        elif self.GA_type == "Lonely_GA_PS_01":
-            self.population = [LonelyDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
-                               for i in range(self.population_size)]
-
-        elif self.GA_type == "Lonely_GA_PS_033":
-            self.population = [LonelyDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
                                for i in range(self.population_size)]
 
         self.evolution()

@@ -6,15 +6,11 @@ from tensorflow.keras.utils import to_categorical
 # from numba import cuda
 
 import random
-from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
-from src.Enums.OptimizerEnum import Optimizer
 from src.Genes.LonelyGene import LonelyGene
-from src.Genes.SimpleGenes.DenseGene import DenseGene
-from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
-# Contains two genes, one overall gene and one dense gene.
+# DNA for LoneLy GA consisting of one gene describing number of neurons in a single dense layer
 class LonelyDNA:
     fitness = 0.0
     history = None
@@ -30,7 +26,7 @@ class LonelyDNA:
         self.mutation_rate = mutation_rate
         self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
-    # uses the normalized mutations rates as probabilities for the number of mutations
+    # uses the normalized mutation rates as probability for mutation
     def mutate(self):
         mutation = random.uniform(0.0, 1.0)
         if mutation <= self.mutation_rate:
@@ -38,6 +34,7 @@ class LonelyDNA:
         else:
             self.gene.mutate()
 
+    # evaluate fitness based on accuracy after training
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
