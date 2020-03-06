@@ -60,7 +60,7 @@ class LonelyLossDNAPS:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-        loss = (1 - hist.history['loss'][-1])
+        loss = (1 / hist.history['loss'][-1])
         self.num_params = model.count_params()
 
         self.fitness = loss / (math.pow(self.num_params, self.scaling))

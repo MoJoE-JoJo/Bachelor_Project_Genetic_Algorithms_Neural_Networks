@@ -1,17 +1,19 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # Install TensorFlow
-import gc
+
 import random
 import copy
 import time
+import gc
+
+# from numba import cuda
 import tensorflow as tf
+from src.DNA.LonelyErrorDNA import LonelyErrorDNA
+from src.DNA.LonelyErrorDNAPS import LonelyErrorDNAPS
 
-from src.DNA.LonelyLossDNA import LonelyLossDNA
-from src.DNA.LonelyLossDNAPS import LonelyLossDNAPS
 
-
-class LonelyLossGA:
+class LonelyErrorGA:
     alive = True
     generation_counter = 0
     notify = None
@@ -42,16 +44,16 @@ class LonelyLossGA:
         self.matingpool = matingpool
         self.population = []
 
-        if self.GA_type == "Lonely_Loss_GA":
-            self.population = [LonelyLossDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+        if self.GA_type == "Lonely_Error_GA":
+            self.population = [LonelyErrorDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
                                for i in range(self.population_size)]
 
-        elif self.GA_type == "Lonely_Loss_GA_PS_01":
-            self.population = [LonelyLossDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
+        if self.GA_type == "Lonely_Error_GA_PS_01":
+            self.population = [LonelyErrorDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
                                for i in range(self.population_size)]
 
-        elif self.GA_type == "Lonely_Loss_GA_PS_033":
-            self.population = [LonelyLossDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
+        if self.GA_type == "Lonely_Error_GA_PS_033":
+            self.population = [LonelyErrorDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
                                for i in range(self.population_size)]
 
         self.evolution()
@@ -71,27 +73,25 @@ class LonelyLossGA:
                 print(time.time() - tc1)
                 tc1 = time.time()
 
-                # Used to update the history of the genetic algorithm
-                self.history.append({"generation": self.generation_counter,
-                                     "loss": self.population[0].evaluated["loss"],
-                                     "accuracy": self.population[0].evaluated["accuracy"],
-                                     "nodes": self.population[0].gene.node_count,
-                                     "params": self.population[0].num_params})
-
-                print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Loss: {5: .4f}, Params: {6}"
+                print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Error_rate: {5: .4f}, Params: {6}"
                       .format(self.generation_counter,
                               self.population[0].optimizer.name,
                               self.population[0].loss.name,
                               self.population[0].gene.node_count,
                               self.population[0].activation.name,
-                              1 / self.population[0].fitness,
+                              self.population[0].fitness,
                               self.population[0].num_params))
 
+                self.history.append({"generation": self.generation_counter,
+                                     "loss": self.population[0].evaluated["loss"],
+                                     "accuracy": self.population[0].evaluated["accuracy"],
+                                     "nodes": self.population[0].gene.node_count,
+                                     "params": self.population[0].num_params})
                 self.notify()  # Used to notify GARunner that an update to the history has happened
 
                 self.generation_counter += 1
                 fitness = [x.fitness for x in matingpool]
                 for i in range(0, self.population_size):
-                    parents = random.choices(matingpool, weights=fitness, k=1)   # .choices normalizes the weights
+                    parents = random.choices(matingpool, weights=fitness, k=1)  # .choices normalizes the weights
                     self.population[i] = copy.deepcopy(parents[0])
                     self.population[i].mutate()

@@ -16,7 +16,7 @@ from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
 # Contains two genes, one overall gene and one dense gene.
-class LonelyDNAASPS:
+class LonelyErrorDNAPS:
     fitness = 0.0
     history = None
     evaluated = 0.0
@@ -61,10 +61,10 @@ class LonelyDNAASPS:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-        accuracy = hist.history['accuracy'][-1]
+        error_rate = 1 / (1 - hist.history['accuracy'][-1])
         self.num_params = model.count_params()
 
-        self.fitness = (1/(1-accuracy)) / (math.pow(self.num_params, self.scaling))
+        self.fitness = error_rate / (math.pow(self.num_params, self.scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))
