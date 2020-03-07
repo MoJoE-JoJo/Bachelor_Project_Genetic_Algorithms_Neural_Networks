@@ -1,0 +1,1 @@
+folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithmLonely_Small,3,"(28,28)",10,255.0,0.1,1,5,120,6,50,6,5,10,10,0.3,Lonely_GALonely_Loss_Small,3,"(28,28)",10,255.0,0.1,1,5,1,6,50,6,5,10,10,0.3,Lonely_Loss_GA

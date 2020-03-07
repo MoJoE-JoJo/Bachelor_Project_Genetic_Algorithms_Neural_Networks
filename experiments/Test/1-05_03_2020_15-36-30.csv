@@ -1,0 +1,27 @@
+Experiment 2 ,05_03_2020_15-36-30
+
+Data shape and running
+input_shape ,"(28, 28)"
+output_shape ,10
+scaling ,255.0
+epochs ,5
+max_runtime,120
+dataset_percentage,0.1
+dataset,mnist
+
+Hyper parameters
+activation_function ,Activation.relu
+initial_max_nodes ,50
+loss_function ,Loss.sparse_categorical_crossentropy
+optimizer ,Optimizer.Adam
+
+GA parameters
+population_size ,10
+mating_pool ,10
+mutation_rate,0.3
+
+OUTPUT
+generation_no,params_no,neurons_no,accuracy,loss
+0,39760,50,0.906,0.29475743103027346
+1,48505,61,0.908,0.2884651656150818
+2,67585,85,0.905,0.2818371386528015
