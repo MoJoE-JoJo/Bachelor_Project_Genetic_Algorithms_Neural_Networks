@@ -7,6 +7,7 @@ import copy
 import time
 import tensorflow as tf
 
+from src.DNA.LonelyLoss.LonelyDNALayers import LonelyDNALayers
 from src.DNA.LonelyLoss.LonelyLossDNA import LonelyLossDNA
 from src.DNA.LonelyLoss.LonelyLossDNAPS import LonelyLossDNAPS
 
@@ -54,6 +55,10 @@ class LonelyLossGA:
             self.population = [LonelyLossDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
                                for i in range(self.population_size)]
 
+        elif self.GA_type == "Lonely_GA_Layers":
+            self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
         self.evolution()
 
     def evolution(self):
@@ -72,20 +77,37 @@ class LonelyLossGA:
                 tc1 = time.time()
 
                 # Used to update the history of the genetic algorithm
-                self.history.append({"generation": self.generation_counter,
-                                     "loss": self.population[0].evaluated["loss"],
-                                     "accuracy": self.population[0].evaluated["accuracy"],
-                                     "nodes": self.population[0].gene.node_count,
-                                     "params": self.population[0].num_params})
+                if self.GA_type == "Lonely_GA_Layers":
+                    self.history.append({"generation": self.generation_counter,
+                                         "loss": self.population[0].evaluated["loss"],
+                                         "accuracy": self.population[0].evaluated["accuracy"],
+                                         "layers": len(self.population[0].genes),
+                                         "params": self.population[0].num_params})
+                    print(
+                        "Generation {0} ----- Optimizer: {1}, Loss: {2}, Layers: {3}, Activation: {4}, Loss: {5: .4f}, Params: {6}"
+                        .format(self.generation_counter,
+                                self.population[0].optimizer.name,
+                                self.population[0].loss.name,
+                                len(self.population[0].genes),
+                                self.population[0].activation.name,
+                                1 / self.population[0].fitness,
+                                self.population[0].num_params))
+                else:
+                    self.history.append({"generation": self.generation_counter,
+                                         "loss": self.population[0].evaluated["loss"],
+                                         "accuracy": self.population[0].evaluated["accuracy"],
+                                         "nodes": self.population[0].gene.node_count,
+                                         "params": self.population[0].num_params})
 
-                print("Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Loss: {5: .4f}, Params: {6}"
-                      .format(self.generation_counter,
-                              self.population[0].optimizer.name,
-                              self.population[0].loss.name,
-                              self.population[0].gene.node_count,
-                              self.population[0].activation.name,
-                              1 / self.population[0].fitness,
-                              self.population[0].num_params))
+                    print(
+                        "Generation {0} ----- Optimizer: {1}, Loss: {2}, Nodes: {3}, Activation: {4}, Loss: {5: .4f}, Params: {6}"
+                        .format(self.generation_counter,
+                                self.population[0].optimizer.name,
+                                self.population[0].loss.name,
+                                self.population[0].gene.node_count,
+                                self.population[0].activation.name,
+                                1 / self.population[0].fitness,
+                                self.population[0].num_params))
 
                 self.notify()  # Used to notify GARunner that an update to the history has happened
 

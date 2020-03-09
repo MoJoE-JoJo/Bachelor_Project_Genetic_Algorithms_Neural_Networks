@@ -42,6 +42,12 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
+    elif ALGORITHM == "Lonely_GA_Layers":
+        writer.write_to_file([ga.history[-1]["generation"],
+                              ga.history[-1]["params"],
+                              ga.history[-1]["layers"],
+                              ga.history[-1]["accuracy"],
+                              ga.history[-1]["loss"]])
     else:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
@@ -222,7 +228,7 @@ def choose_GA():
     elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
         return LonelyGA(ALGORITHM)
     # Lonely_Loss_GA variations
-    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033"]:
+    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers"]:
         return LonelyLossGA(ALGORITHM)
     # Lonely_Error_GA variations
     elif ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
@@ -309,6 +315,8 @@ for exp in experiments:
 
         if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
+        elif ALGORITHM == "Lonely_GA_Layers":
+            writer.write_to_file(['generation_no', 'params_no', 'layers_no', 'accuracy', 'loss'])
         else:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
@@ -322,7 +330,7 @@ for exp in experiments:
             ga.alive = False
             experiment_data.append(ga.history)
 
-        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033"]:
+        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers"]:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()
