@@ -10,6 +10,7 @@ from ast import literal_eval as make_tuple
 import tensorflow as tf
 from tensorflow.keras import datasets
 import matplotlib.pyplot as plt
+import matplotlib
 import time
 
 
@@ -176,14 +177,16 @@ def make_plot(data):
         ax_los.set(xlabel='', ylabel='loss')
         ax_params.set(xlabel='generation', ylabel='parameters')
 
-    acc_bl_val= 0.984 # Found as the averages of epoch 25-80 of SimpleNet baseline
-    los_bl_val = 0.0896 # Found as the averages of epoch 25-80 of SimpleNet baseline
+    acc_bl_val = 0.984  # Found as the averages of epoch 25-80 of SimpleNet baseline
+    los_bl_val = 0.0896  # Found as the averages of epoch 25-80 of SimpleNet baseline
+    params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
     x_bl.append(max(x) + 1)
     y_bl_acc = [acc_bl_val for val in x_bl]
     y_bl_los = [los_bl_val for val in x_bl]
+    y_bl_params = [params_bl_val for val in x_bl]
     yerr_bl = [0 for val in y_bl_acc]
 
     ax_acc.set_xticks(x)
@@ -202,9 +205,12 @@ def make_plot(data):
     ax_los.errorbar(x, y_los, yerr=yerr_los)
     ax_params.errorbar(x, y_params, yerr=yerr_params)
 
+    ax_params.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
+
     if ALGORITHM != 'SimpleNet':
         ax_acc.errorbar(x_bl, y_bl_acc, yerr=yerr_bl)
         ax_los.errorbar(x_bl, y_bl_los, yerr=yerr_bl)
+        ax_params.errorbar(x_bl, y_bl_params, yerr=yerr_bl)
 
     plt.savefig(fname=(path + "plot.svg"))
 
