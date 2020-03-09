@@ -12,20 +12,20 @@ from src.Genes.LonelyGene import LonelyGene
 
 # Contains a list of genes, initially of length 1
 class LonelyDNALayers:
+    scaling = 0.33
     history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, scaling):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.scaling = scaling
-        self.genes = [self.create_gene()]
+        self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
 
     # check if the DNA should mutate
     def mutate(self):
@@ -38,8 +38,8 @@ class LonelyDNALayers:
     # decide mutate type
     def do_mutate(self):
         # if the DNA contains no genes the only possible mutation is to add a gene (layer)
-        if self.genes.count() == 0:
-            self.genes = self.genes + [self.create_gene()]
+        if len(self.genes) == 0:
+            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
         # else either mutate a gene or add/remove a gene
         else:
             mutation_type = random.choice([1, 2])
@@ -51,28 +51,26 @@ class LonelyDNALayers:
     # mutate a random gene (layer)
     def mutate_gene(self):
         gene = random.randrange(len(self.genes))
-        self.genes[gene] = self.genes[gene].mutate()
+        self.genes[gene].mutate()
 
     # randomly add or remove a gene (layer)
     def mutate_gene_no(self):
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            self.genes = self.genes + [self.create_gene()]
+            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))
-
-    # return a gene (layer) with random node count within bounds
-    def create_gene(self):
-        return LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
 
         input_layer = [tf.keras.layers.Flatten(input_shape=input_shape)]
-        hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
+        hidden_layers = []
+        if len(self.genes) > 0:
+            hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
         output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
 
         model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
@@ -91,8 +89,8 @@ class LonelyDNALayers:
 
         loss = (1 / hist.history['loss'][-1])
 
-        self.fitness = loss / (math.pow(self.num_params, self.scaling))
         self.num_params = model.count_params()
+        self.fitness = loss / (math.pow(self.num_params, self.scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

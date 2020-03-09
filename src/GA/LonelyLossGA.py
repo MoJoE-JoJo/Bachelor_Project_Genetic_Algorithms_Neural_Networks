@@ -81,14 +81,14 @@ class LonelyLossGA:
                     self.history.append({"generation": self.generation_counter,
                                          "loss": self.population[0].evaluated["loss"],
                                          "accuracy": self.population[0].evaluated["accuracy"],
-                                         "layers": self.population[0].genes.count(),
+                                         "layers": len(self.population[0].genes),
                                          "params": self.population[0].num_params})
                     print(
                         "Generation {0} ----- Optimizer: {1}, Loss: {2}, Layers: {3}, Activation: {4}, Loss: {5: .4f}, Params: {6}"
                         .format(self.generation_counter,
                                 self.population[0].optimizer.name,
                                 self.population[0].loss.name,
-                                self.population[0].genes.count(),
+                                len(self.population[0].genes),
                                 self.population[0].activation.name,
                                 1 / self.population[0].fitness,
                                 self.population[0].num_params))

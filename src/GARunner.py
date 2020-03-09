@@ -120,7 +120,6 @@ def make_plot(data):
 
     ys = []
     ys = data #Need to only select the relevant stuff
-    print(data)
 
     #Makes sure that they have the same length, in case some of the repetitions get to make more generations than the rest
     min_length = float("inf")
