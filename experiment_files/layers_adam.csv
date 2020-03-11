@@ -1,0 +1,2 @@
+folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithmBaseline,3,"(28,28)",10,255.0,0.1,1,5,3600,6,50,6,5,10,10,0.2,Lonely_GALonely_Loss_Param_Scale_0.33,3,"(28,28)",10,255.0,0.1,1,5,3600,6,50,6,5,10,10,0.2,Lonely_Loss_GA_PS_033Lonely_GA_Layers,3,"(28,28)",10,255.0,0.1,1,5,3600,6,50,6,5,10,10,0.2,Lonely_GA_Layers
+
