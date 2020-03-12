@@ -8,7 +8,10 @@ import time
 import tensorflow as tf
 
 from src.DNA.LonelyLoss.LonelyDNALayers import LonelyDNALayers
+from src.DNA.LonelyLoss.LonelyDNALayersAll import LonelyDNALayersAll
 from src.DNA.LonelyLoss.LonelyLossDNA import LonelyLossDNA
+from src.DNA.LonelyLoss.LonelyLossDNAExponential import LonelyLossDNAExponential
+from src.DNA.LonelyLoss.LonelyLossDNALSPS import LonelyLossDNALSPS
 from src.DNA.LonelyLoss.LonelyLossDNAPS import LonelyLossDNAPS
 
 
@@ -55,8 +58,45 @@ class LonelyLossGA:
             self.population = [LonelyLossDNAPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
                                for i in range(self.population_size)]
 
+        # Exponential loss
+        elif self.GA_type == "Lonely_Loss_GA_LS_PS_2_033":
+            self.population = [LonelyLossDNALSPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 2, 0.33)
+                               for i in range(self.population_size)]
+        elif self.GA_type == "Lonely_Loss_GA_LS_PS_3_033":
+            self.population = [LonelyLossDNALSPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 3, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_LS_PS_4_033":
+            self.population = [LonelyLossDNALSPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 4, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_LS_PS_5_033":
+            self.population = [LonelyLossDNALSPS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5, 0.33)
+                               for i in range(self.population_size)]
+
+        # Full exponential
+        elif self.GA_type == "Lonely_Loss_GA_Exp_2_033":
+            self.population = [LonelyLossDNAExponential(initial_max_nodes, activation, optimizer, loss, mutation_rate, 2, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_Exp_3_033":
+            self.population = [LonelyLossDNAExponential(initial_max_nodes, activation, optimizer, loss, mutation_rate, 3, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_Exp_4_033":
+            self.population = [LonelyLossDNAExponential(initial_max_nodes, activation, optimizer, loss, mutation_rate, 4, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Loss_GA_Exp_5_033":
+            self.population = [LonelyLossDNAExponential(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5, 0.33)
+                               for i in range(self.population_size)]
+
         elif self.GA_type == "Lonely_GA_Layers":
             self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_All":
+            self.population = [LonelyDNALayersAll(initial_max_nodes, activation, optimizer, loss, mutation_rate)
                                for i in range(self.population_size)]
 
         self.evolution()
@@ -77,7 +117,7 @@ class LonelyLossGA:
                 tc1 = time.time()
 
                 # Used to update the history of the genetic algorithm
-                if self.GA_type == "Lonely_GA_Layers":
+                if self.GA_type in ["Lonely_GA_Layers", "Lonely_GA_Layers_All"]:
                     self.history.append({"generation": self.generation_counter,
                                          "loss": self.population[0].evaluated["loss"],
                                          "accuracy": self.population[0].evaluated["accuracy"],
