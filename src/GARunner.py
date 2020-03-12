@@ -42,7 +42,7 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
-    elif ALGORITHM == "Lonely_GA_Layers":
+    elif ALGORITHM in ["Lonely_GA_Layers", "Lonely_GA_Layers_All"]:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
                               ga.history[-1]["layers"],
@@ -228,7 +228,10 @@ def choose_GA():
     elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
         return LonelyGA(ALGORITHM)
     # Lonely_Loss_GA variations
-    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers"]:
+    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers",
+                       "Lonely_Loss_GA_LS_PS_2_033", "Lonely_Loss_GA_LS_PS_3_033", "Lonely_Loss_GA_LS_PS_4_033",
+                       "Lonely_Loss_GA_LS_PS_5_033", "Lonely_Loss_GA_Exp_2_033", "Lonely_Loss_GA_Exp_3_033",
+                       "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All"]:
         return LonelyLossGA(ALGORITHM)
     # Lonely_Error_GA variations
     elif ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
@@ -330,7 +333,10 @@ for exp in experiments:
             ga.alive = False
             experiment_data.append(ga.history)
 
-        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers"]:
+        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers",
+                         "Lonely_Loss_GA_LS_PS_2_033", "Lonely_Loss_GA_LS_PS_3_033", "Lonely_Loss_GA_LS_PS_4_033",
+                         "Lonely_Loss_GA_LS_PS_5_033", "Lonely_Loss_GA_Exp_2_033", "Lonely_Loss_GA_Exp_3_033",
+                         "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All"]:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()

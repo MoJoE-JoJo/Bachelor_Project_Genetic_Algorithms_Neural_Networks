@@ -1,1 +1,9 @@
-folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithmTest_Layers,1,"(28,28)",10,255.0,0.1,1,5,120,6,50,6,5,10,10,0.3,Lonely_GA_Layers
+folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithmLonely_Loss_LS_2,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_LS_PS_2_033
+Lonely_Loss_LS_3,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_LS_PS_3_033
+Lonely_Loss_LS_4,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_LS_PS_4_033
+Lonely_Loss_LS_5,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_LS_PS_5_033Lonely_Loss_Exp_2,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_Exp_2_033
+Lonely_Loss_Exp_3,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_Exp_3_033
+Lonely_Loss_Exp_4,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_Exp_4_033
+Lonely_Loss_Exp_5,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_Loss_GA_Exp_5_033
+
+Layers_mutate_all,1,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Lonely_GA_Layers_All
