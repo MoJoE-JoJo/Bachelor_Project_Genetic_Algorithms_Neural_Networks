@@ -42,7 +42,10 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
-    elif ALGORITHM in ["Lonely_GA_Layers", "Lonely_GA_Layers_All"]:
+    elif ALGORITHM in ["Lonely_GA_Layers", "Lonely_GA_Layers_All",
+                       "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
+                       "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
+                       "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
                               ga.history[-1]["layers"],
@@ -231,7 +234,10 @@ def choose_GA():
     elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers",
                        "Lonely_Loss_GA_LS_PS_2_033", "Lonely_Loss_GA_LS_PS_3_033", "Lonely_Loss_GA_LS_PS_4_033",
                        "Lonely_Loss_GA_LS_PS_5_033", "Lonely_Loss_GA_Exp_2_033", "Lonely_Loss_GA_Exp_3_033",
-                       "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All"]:
+                       "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All",
+                       "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
+                       "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
+                       "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
         return LonelyLossGA(ALGORITHM)
     # Lonely_Error_GA variations
     elif ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
@@ -336,7 +342,10 @@ for exp in experiments:
         if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers",
                          "Lonely_Loss_GA_LS_PS_2_033", "Lonely_Loss_GA_LS_PS_3_033", "Lonely_Loss_GA_LS_PS_4_033",
                          "Lonely_Loss_GA_LS_PS_5_033", "Lonely_Loss_GA_Exp_2_033", "Lonely_Loss_GA_Exp_3_033",
-                         "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All"]:
+                         "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All",
+                         "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
+                         "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
+                         "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()

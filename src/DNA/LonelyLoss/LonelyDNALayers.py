@@ -12,19 +12,20 @@ from src.Genes.LonelyGene import LonelyGene
 
 # Contains a list of genes, initially of length 1
 class LonelyDNALayers:
-    scaling = 0.33
     history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, loss_scaling, parameter_scaling):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
+        self.loss_scaling = loss_scaling
+        self.parameter_scaling = parameter_scaling
         self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
 
     # check if the DNA should mutate
@@ -90,7 +91,7 @@ class LonelyDNALayers:
         loss = (1 / hist.history['loss'][-1])
 
         self.num_params = model.count_params()
-        self.fitness = loss / (math.pow(self.num_params, self.scaling))
+        self.fitness = (math.pow(loss, self.loss_scaling)) / (math.pow(self.num_params, self.parameter_scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))
