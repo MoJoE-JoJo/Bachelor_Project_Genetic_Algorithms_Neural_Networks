@@ -1,3 +1,4 @@
+import copy
 import gc
 import math
 
@@ -11,7 +12,8 @@ from src.Genes.LonelyGene import LonelyGene
 
 
 # Contains a list of genes, initially of length 1
-class LonelyDNALayersAll:
+class LonelyDNALayersLS:
+    scaling = 0.33
     history = None
     fitness = 0.0
     evaluated = 0.0
@@ -59,7 +61,10 @@ class LonelyDNALayersAll:
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            new_gene = copy.deepcopy(self.genes[-1])
+            new_gene.mutate()
+            self.genes = self.genes + [new_gene]
+            # self.genes[len(self.genes) - 1].mutate()
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))
@@ -87,10 +92,9 @@ class LonelyDNALayersAll:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-
         loss = (1 / hist.history['loss'][-1])
-
         self.num_params = model.count_params()
+
         self.fitness = math.pow(loss, self.loss_scaling) / (math.pow(self.num_params, self.parameter_scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)

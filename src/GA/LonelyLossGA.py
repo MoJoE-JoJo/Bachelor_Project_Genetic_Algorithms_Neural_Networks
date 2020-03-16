@@ -9,6 +9,7 @@ import tensorflow as tf
 
 from src.DNA.LonelyLoss.LonelyDNALayers import LonelyDNALayers
 from src.DNA.LonelyLoss.LonelyDNALayersAll import LonelyDNALayersAll
+from src.DNA.LonelyLoss.LonelyDNALayersLS import LonelyDNALayersLS
 from src.DNA.LonelyLoss.LonelyLossDNA import LonelyLossDNA
 from src.DNA.LonelyLoss.LonelyLossDNAExponential import LonelyLossDNAExponential
 from src.DNA.LonelyLoss.LonelyLossDNALSPS import LonelyLossDNALSPS
@@ -92,11 +93,47 @@ class LonelyLossGA:
                                for i in range(self.population_size)]
 
         elif self.GA_type == "Lonely_GA_Layers":
-            self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+            self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate, 1, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_LS_3":
+            self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate, 3, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_LS_4":
+            self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate, 4, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_LS_5":
+            self.population = [LonelyDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5, 0.33)
                                for i in range(self.population_size)]
 
         elif self.GA_type == "Lonely_GA_Layers_All":
-            self.population = [LonelyDNALayersAll(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+            self.population = [LonelyDNALayersAll(initial_max_nodes, activation, optimizer, loss, mutation_rate, 1, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_All_LS_3":
+            self.population = [LonelyDNALayersAll(initial_max_nodes, activation, optimizer, loss, mutation_rate, 3, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_All_LS_4":
+            self.population = [LonelyDNALayersAll(initial_max_nodes, activation, optimizer, loss, mutation_rate, 4, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_All_LS_5":
+            self.population = [LonelyDNALayersAll(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_Copy_LS_3":
+            self.population = [LonelyDNALayersLS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 3, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_Copy_LS_4":
+            self.population = [LonelyDNALayersLS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 4, 0.33)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_GA_Layers_Copy_LS_5":
+            self.population = [LonelyDNALayersLS(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5, 0.33)
                                for i in range(self.population_size)]
 
         self.evolution()
@@ -117,7 +154,10 @@ class LonelyLossGA:
                 tc1 = time.time()
 
                 # Used to update the history of the genetic algorithm
-                if self.GA_type in ["Lonely_GA_Layers", "Lonely_GA_Layers_All"]:
+                if self.GA_type in ["Lonely_GA_Layers", "Lonely_GA_Layers_All",
+                                    "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
+                                    "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
+                                    "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
                     self.history.append({"generation": self.generation_counter,
                                          "loss": self.population[0].evaluated["loss"],
                                          "accuracy": self.population[0].evaluated["accuracy"],
