@@ -5,6 +5,7 @@ import os.path
 import sys
 import gc
 import csv
+import re
 from ast import literal_eval as make_tuple
 
 import tensorflow as tf
@@ -249,9 +250,12 @@ initialize_tf()
 
 
 # READ EXPERIMENTS FROM FILE
+regex = re.compile('#[\\w\\W]*')
+
 input_file = open(sys.argv[1], "r")
 input_reader = csv.DictReader(input_file)
-experiments = [row for row in input_reader]
+filtered = [row for row in input_reader if not(regex.fullmatch(row["folder_name"]))]
+experiments = filtered
 input_file.close()
 path = ""
 
