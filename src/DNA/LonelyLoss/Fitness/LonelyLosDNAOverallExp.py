@@ -1,4 +1,5 @@
 import gc
+import math
 
 import tensorflow as tf
 from tensorflow.keras import datasets
@@ -13,20 +14,21 @@ from src.Genes.SimpleGenes.DenseGene import DenseGene
 from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
-# Contains two genes, one overall gene and one dense gene.
-class LonelyLossDNA:
+class LonelyLosDNAOverallExp:
     fitness = 0.0
     history = None
     evaluated = 0.0
     num_params = 0
+    parameter_scaling = 0.33
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
+        self.exponent = exponent
         self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
     # uses the normalized mutations rates as probabilities for the number of mutations
@@ -56,9 +58,12 @@ class LonelyLossDNA:
                       metrics=['accuracy'])
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
-        self.fitness = (1 / hist.history['loss'][-1])
+
         self.history = hist.history
+        loss = (1 / hist.history['loss'][-1])
         self.num_params = model.count_params()
+
+        self.fitness = math.pow((loss / math.pow(self.num_params, self.parameter_scaling)), self.exponent)
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

@@ -1,4 +1,3 @@
-import copy
 import gc
 import math
 
@@ -12,22 +11,21 @@ from src.Genes.LonelyGene import LonelyGene
 
 
 # Contains a list of genes, initially of length 1
-class LonelyDNALayersLS:
-    scaling = 0.33
+class LonelyLosDNALayersMutAll:
     history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
+    parameter_scaling = 0.33
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, loss_scaling, parameter_scaling):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.loss_scaling = loss_scaling
-        self.parameter_scaling = parameter_scaling
+        self.exponent = exponent
         self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
 
     # check if the DNA should mutate
@@ -61,10 +59,7 @@ class LonelyDNALayersLS:
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            new_gene = copy.deepcopy(self.genes[-1])
-            new_gene.mutate()
-            self.genes = self.genes + [new_gene]
-            # self.genes[len(self.genes) - 1].mutate()
+            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))
@@ -92,10 +87,11 @@ class LonelyDNALayersLS:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-        loss = (1 / hist.history['loss'][-1])
-        self.num_params = model.count_params()
 
-        self.fitness = math.pow(loss, self.loss_scaling) / (math.pow(self.num_params, self.parameter_scaling))
+        loss = (1 / hist.history['loss'][-1])
+
+        self.num_params = model.count_params()
+        self.fitness = math.pow(loss, self.exponent) / (math.pow(self.num_params, self.parameter_scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

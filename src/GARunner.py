@@ -17,10 +17,7 @@ import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
-from src.GA.SimpleGA import SimpleGA
 from src.GA.LonelyGA import LonelyGA
-from src.GA.LonelyErrorGA import LonelyErrorGA
-from src.GA.LonelyLossGA import LonelyLossGA
 from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
@@ -42,10 +39,7 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
-    elif ALGORITHM in ["Lonely_GA_Layers", "Lonely_GA_Layers_All",
-                       "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
-                       "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
-                       "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
+    elif "Layers" in ALGORITHM:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
                               ga.history[-1]["layers"],
@@ -228,20 +222,8 @@ def choose_GA():
     if ALGORITHM == "SimpleNet":
         return SimpleNet()
     # Lonely_GA variations
-    elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
+    elif "Lonely" in ALGORITHM:
         return LonelyGA(ALGORITHM)
-    # Lonely_Loss_GA variations
-    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers",
-                       "Lonely_Loss_GA_LS_PS_2_033", "Lonely_Loss_GA_LS_PS_3_033", "Lonely_Loss_GA_LS_PS_4_033",
-                       "Lonely_Loss_GA_LS_PS_5_033", "Lonely_Loss_GA_Exp_2_033", "Lonely_Loss_GA_Exp_3_033",
-                       "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All",
-                       "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
-                       "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
-                       "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
-        return LonelyLossGA(ALGORITHM)
-    # Lonely_Error_GA variations
-    elif ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
-        return LonelyErrorGA(ALGORITHM)
 
 
 gc.enable()
@@ -324,36 +306,14 @@ for exp in experiments:
 
         if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
-        elif ALGORITHM == "Lonely_GA_Layers":
+        elif "Layers" in ALGORITHM: # TODO opmærksom på senere ved nye algoritmer
             writer.write_to_file(['generation_no', 'params_no', 'layers_no', 'accuracy', 'loss'])
         else:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
 
-        if ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
-            t = Thread(target=lonely_ga)
-            t.daemon = True
-            t.start()
-            t.join(MAX_RUNTIME)
-            ga.alive = False
-            experiment_data.append(ga.history)
-
-        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers",
-                         "Lonely_Loss_GA_LS_PS_2_033", "Lonely_Loss_GA_LS_PS_3_033", "Lonely_Loss_GA_LS_PS_4_033",
-                         "Lonely_Loss_GA_LS_PS_5_033", "Lonely_Loss_GA_Exp_2_033", "Lonely_Loss_GA_Exp_3_033",
-                         "Lonely_Loss_GA_Exp_4_033", "Lonely_Loss_GA_Exp_5_033", "Lonely_GA_Layers_All",
-                         "Lonely_GA_Layers_LS_3", "Lonely_GA_Layers_LS_4", "Lonely_GA_Layers_LS_5",
-                         "Lonely_GA_Layers_All_LS_3", "Lonely_GA_Layers_All_LS_4", "Lonely_GA_Layers_All_LS_5",
-                         "Lonely_GA_Layers_Copy_LS_3", "Lonely_GA_Layers_Copy_LS_4", "Lonely_GA_Layers_Copy_LS_5"]:
-            t = Thread(target=lonely_ga)
-            t.daemon = True
-            t.start()
-            t.join(MAX_RUNTIME)
-            ga.alive = False
-            experiment_data.append(ga.history)
-
-        if ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
+        if "Lonely" in ALGORITHM:
             t = Thread(target=lonely_ga)
             t.daemon = True
             t.start()
