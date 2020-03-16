@@ -1,0 +1,37 @@
+# LONELY ACC GA
+	Lonely_Acc
+	Lonely_Acc_Validation
+	Lonely_Acc_Par_Scale_0_1
+	Lonely_Acc_Par_Scale_0_33
+
+# LONELY ERR GA
+	Lonely_Err
+	Lonely_Err_Par_Scale_0_1
+	Lonely_Err_Par_Scale_0_33
+
+# LONELY LOS GA
+	Lonely_Los
+	Lonely_Los_Par_Scale_0_1
+	Lonely_Los_Par_Scale_0_33
+
+	Lonely_Los_Exp_Loss_2
+	Lonely_Los_Exp_Loss_3
+	Lonely_Los_Exp_Loss_4
+	Lonely_Los_Exp_Loss_5
+
+	Lonely_Los_Overall_Exp_2
+	Lonely_Los_Overall_Exp_3
+	Lonely_Los_Overall_Exp_4
+	Lonely_Los_Overall_Exp_5
+
+	Lonely_Los_Layers_3
+	Lonely_Los_Layers_4
+	Lonely_Los_Layers_5
+
+	Lonely_Los_Layers_Mut_All_3
+	Lonely_Los_Layers_Mut_All_4
+	Lonely_Los_Layers_Mut_All_5
+
+	Lonely_Los_Layers_Mut_All_Copy_3
+	Lonely_Los_Layers_Mut_All_Copy_4
+	Lonely_Los_Layers_Mut_All_Copy_5

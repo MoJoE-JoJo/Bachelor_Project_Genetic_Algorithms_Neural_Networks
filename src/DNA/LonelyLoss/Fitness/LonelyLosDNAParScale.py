@@ -1,9 +1,9 @@
 import gc
+import math
 
 import tensorflow as tf
 from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
-# from numba import cuda
 
 import random
 from src.Enums.ActivationEnum import Activation
@@ -15,19 +15,20 @@ from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
 # Contains two genes, one overall gene and one dense gene.
-class LonelyDNA:
+class LonelyLosDNAParScale:
     fitness = 0.0
     history = None
     evaluated = 0.0
     num_params = 0
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, scaling):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
+        self.scaling = scaling
         self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
     # uses the normalized mutations rates as probabilities for the number of mutations
@@ -57,9 +58,12 @@ class LonelyDNA:
                       metrics=['accuracy'])
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
-        self.fitness = hist.history['accuracy'][-1]
+
         self.history = hist.history
+        loss = (1 / hist.history['loss'][-1])
         self.num_params = model.count_params()
+
+        self.fitness = loss / (math.pow(self.num_params, self.scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

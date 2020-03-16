@@ -14,21 +14,21 @@ from src.Genes.SimpleGenes.DenseGene import DenseGene
 from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
-# Contains two genes, one overall gene and one dense gene.
-class LonelyLossDNAPS:
+class LonelyLosDNAExpLoss:
     fitness = 0.0
     history = None
     evaluated = 0.0
     num_params = 0
+    parameter_scaling = 0.33
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, scaling):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, loss_exp):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.scaling = scaling
+        self.loss_exp = loss_exp
         self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
     # uses the normalized mutations rates as probabilities for the number of mutations
@@ -63,7 +63,7 @@ class LonelyLossDNAPS:
         loss = (1 / hist.history['loss'][-1])
         self.num_params = model.count_params()
 
-        self.fitness = loss / (math.pow(self.num_params, self.scaling))
+        self.fitness = math.pow(loss, self.loss_exp) / (math.pow(self.num_params, self.parameter_scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

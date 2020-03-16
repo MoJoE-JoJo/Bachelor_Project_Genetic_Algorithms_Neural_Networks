@@ -15,7 +15,7 @@ from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
 # Contains two genes, one overall gene and one dense gene.
-class LonelyErrorDNA:
+class LonelyErrDNA:
     fitness = 0.0
     history = None
     evaluated = 0.0
