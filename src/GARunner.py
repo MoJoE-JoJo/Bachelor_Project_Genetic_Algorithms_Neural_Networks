@@ -187,6 +187,8 @@ def make_plot(data):
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
+    print(data)
+
     x_bl.append(max(x) + 1)
     y_bl_acc = [acc_bl_val for val in x_bl]
     y_bl_los = [los_bl_val for val in x_bl]
