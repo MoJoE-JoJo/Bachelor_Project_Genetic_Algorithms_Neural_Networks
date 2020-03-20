@@ -5,8 +5,12 @@ import os.path
 import sys
 import gc
 import csv
+from math import inf
+
+import numpy
 import re
 from ast import literal_eval as make_tuple
+from threading import Thread
 
 import tensorflow as tf
 from tensorflow.keras import datasets
@@ -14,7 +18,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import time
 
-
+from src.GA.CrossoverGA import CrossoverGA
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
@@ -28,6 +32,7 @@ from src.SOTA.Simple_SimpleNet.SimpleNet_Runnable import SimpleNet
 writer = None
 ga = None
 
+
 def write_to_file(data):
     print("Writing")
     writer.write_to_file(data)
@@ -40,7 +45,7 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
-    elif "Layers" in ALGORITHM:
+    elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
                               ga.history[-1]["layers"],
@@ -54,7 +59,7 @@ def notify():
                               ga.history[-1]["loss"]])
 
 
-def lonely_ga():
+def start_ga():
     global experiments, writer, ga,\
            FOLDER_NAME, REPETITIONS, \
            INPUT_SHAPE, OUTPUT_SHAPE, SCALING, DATASET_PERCENTAGE, DATASET, EPOCHS, MAX_RUNTIME, \
@@ -110,6 +115,61 @@ def initialize_tf():
     model.fit(x_train[:10], y_train[:10], epochs=1, verbose=0)
 
 
+def write_summary(data):
+    # prepare data
+    ys = data
+    min_length = float("inf")
+    for i in ys:
+        if len(i) < min_length:
+            min_length = len(i)
+    ys = [i[:min_length] for i in ys]
+
+    y_acc = [[y[x]["accuracy"] for y in ys] for x in range(min_length)]
+    y_los = [[y[x]["loss"] for y in ys] for x in range(min_length)]
+    y_par = [[y[x]["params"] for y in ys] for x in range(min_length)]
+
+    writer = FileWriter(path + 'summary' + '-', 'Summary ')
+    writer.write_to_file([])
+
+    writer.write_to_file(["ACCURACY"])
+    write_min_max(y_acc, writer)
+    write_stdev(y_acc, writer)
+    writer.write_to_file([])
+
+    writer.write_to_file(["LOSS"])
+    write_min_max(y_los, writer)
+    write_stdev(y_los, writer)
+    writer.write_to_file([])
+
+    writer.write_to_file(["PARAMETERS"])
+    write_min_max(y_par, writer)
+    write_stdev(y_par, writer)
+
+
+def write_min_max(data, writer):
+    min_val = float(inf)
+    max_val = 0
+    for i in data:
+        min_i = min(i)
+        max_i = max(i)
+        if min_i < min_val:
+            min_val = min_i
+        if max_i > max_val:
+            max_val = max_i
+
+    writer.write_to_file(['Min val', ' ' + str(min_val)])
+    writer.write_to_file(['Max val', ' ' + str(max_val)])
+
+def write_stdev(data, writer):
+    stdevs = [numpy.std(d) for d in data]
+
+    avg_stdev = numpy.mean(stdevs)
+    stdev_of_stdev = numpy.std(stdevs)
+
+    writer.write_to_file(['Average stdev', ' ' + str(avg_stdev)])
+    writer.write_to_file(['Stdev of stdev', ' ' + str(stdev_of_stdev)])
+
+
 def make_plot(data):
     global experiments, writer,\
            FOLDER_NAME, REPETITIONS, \
@@ -118,9 +178,10 @@ def make_plot(data):
            POPULATION_SIZE, MATING_POOL, MUTATION_RATE
 
     ys = []
-    ys = data #Need to only select the relevant stuff
+    ys = data # Need to only select the relevant stuff
 
-    #Makes sure that they have the same length, in case some of the repetitions get to make more generations than the rest
+    # Makes sure that they have the same length, in case some of
+    # the repetitions get to make more generations than the rest
     min_length = float("inf")
     for i in ys:
         if len(i) < min_length:
@@ -187,7 +248,6 @@ def make_plot(data):
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
-    #print(data)
 
     x_bl.append(max(x) + 1)
     y_bl_acc = [acc_bl_val for val in x_bl]
@@ -227,6 +287,9 @@ def choose_GA():
     # Lonely_GA variations
     elif "Lonely" in ALGORITHM:
         return LonelyGA(ALGORITHM)
+    # Crossover_GA variation
+    elif "Crossover" in ALGORITHM:
+        return CrossoverGA(ALGORITHM)
 
 
 gc.enable()
@@ -312,15 +375,15 @@ for exp in experiments:
 
         if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
-        elif "Layers" in ALGORITHM: # TODO opmærksom på senere ved nye algoritmer
+        elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM: # TODO opmærksom på senere ved nye algoritmer
             writer.write_to_file(['generation_no', 'params_no', 'layers_no', 'accuracy', 'loss'])
         else:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
 
-        if "Lonely" in ALGORITHM:
-            t = Thread(target=lonely_ga)
+        if "Lonely" in ALGORITHM or "Crossover" in ALGORITHM:
+            t = Thread(target=start_ga)
             t.daemon = True
             t.start()
             t.join(MAX_RUNTIME)
@@ -335,5 +398,6 @@ for exp in experiments:
             experiment_data.append(ga.history)
 
         writer.close()
+    write_summary(experiment_data)
     make_plot(experiment_data)
 
