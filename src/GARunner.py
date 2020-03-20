@@ -5,6 +5,7 @@ import csv
 from math import inf
 
 import numpy
+import re
 from ast import literal_eval as make_tuple
 from threading import Thread
 
@@ -241,6 +242,7 @@ def make_plot(data):
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
+
     x_bl.append(max(x) + 1)
     y_bl_acc = [acc_bl_val for val in x_bl]
     y_bl_los = [los_bl_val for val in x_bl]
@@ -286,9 +288,12 @@ initialize_tf()
 
 
 # READ EXPERIMENTS FROM FILE
+regex = re.compile('#[\\w\\W]*')
+
 input_file = open(sys.argv[1], "r")
 input_reader = csv.DictReader(input_file)
-experiments = [row for row in input_reader]
+filtered = [row for row in input_reader if not(regex.fullmatch(row["folder_name"]))]
+experiments = filtered
 input_file.close()
 path = ""
 

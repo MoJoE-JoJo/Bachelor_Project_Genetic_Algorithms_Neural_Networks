@@ -1,4 +1,4 @@
-Experiment 2 ,20_03_2020_10-44-52
+Experiment 1 ,20_03_2020_11-21-34
 
 Data shape and running
 input_shape ,"(28, 28)"
@@ -22,5 +22,5 @@ mutation_rate,0.3
 
 OUTPUT
 generation_no,params_no,layers_no,accuracy,loss
-0,38170,1,0.908,0.28921487188339234
-1,31996,2,0.916,0.2776925187110901
+0,38965,1,0.906,0.2989978408813477
+1,30220,1,0.91,0.3048218686580658

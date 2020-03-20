@@ -65,8 +65,16 @@ class LonelyGA:
         while self.alive:
             for i in self.population:
                 if self.alive:
-                    i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size,
-                                   data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+                    try:
+                        i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size,
+                                       data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+                    except:
+                        try:
+                            i.fitness_func(input_shape=self.input_shape, output_shape=self.output_size,
+                                           data=self.dataset, scaling=self.scaling, epochs=self.epochs)
+                        except:
+                            print("Error occured, its a bug in TensorFlow-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
+                            i.fitness = 0
                     tf.keras.backend.clear_session()
 
             if self.alive:

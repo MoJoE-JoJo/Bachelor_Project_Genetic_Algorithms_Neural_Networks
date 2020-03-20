@@ -12,7 +12,6 @@ from src.Genes.LonelyGene import LonelyGene
 
 # Contains a list of genes, initially of length 1
 class LonelyLosDNALayers:
-    history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
@@ -68,13 +67,20 @@ class LonelyLosDNALayers:
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
 
-        input_layer = [tf.keras.layers.Flatten(input_shape=input_shape)]
-        hidden_layers = []
-        if len(self.genes) > 0:
-            hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
-        output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
+        #input_layer = [tf.keras.layers.Flatten(input_shape=input_shape)]
+        #hidden_layers = []
+        #if len(self.genes) > 0:
+        #    hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
+        #output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
 
-        model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
+        model = tf.keras.models.Sequential()
+        model.add(tf.keras.layers.Flatten(input_shape=input_shape))
+        if len(self.genes) > 0:
+            for gene in self.genes:
+                model.add(tf.keras.layers.Dense(gene.node_count, activation=self.activation.name))
+        model.add(tf.keras.layers.Dense(output_shape, activation='softmax'))
+
+        #model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
 
         if self.loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
             y_train = to_categorical(y_train, 10)
@@ -85,8 +91,6 @@ class LonelyLosDNALayers:
                       metrics=['accuracy'])
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
-
-        self.history = hist.history
 
         loss = (1 / hist.history['loss'][-1])
 
