@@ -1,18 +1,16 @@
-from threading import Thread
-from multiprocessing import Process
-
 import os.path
 import sys
 import gc
 import csv
+from math import inf
+
+import numpy
 from ast import literal_eval as make_tuple
+from threading import Thread
 
 import tensorflow as tf
 from tensorflow.keras import datasets
 import matplotlib.pyplot as plt
-import matplotlib
-import time
-
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
@@ -26,6 +24,7 @@ from src.SOTA.Simple_SimpleNet.SimpleNet_Runnable import SimpleNet
 
 writer = None
 ga = None
+
 
 def write_to_file(data):
     print("Writing")
@@ -109,6 +108,61 @@ def initialize_tf():
     model.fit(x_train[:10], y_train[:10], epochs=1, verbose=0)
 
 
+def write_summary(data):
+    # prepare data
+    ys = data
+    min_length = float("inf")
+    for i in ys:
+        if len(i) < min_length:
+            min_length = len(i)
+    ys = [i[:min_length] for i in ys]
+
+    y_acc = [[y[x]["accuracy"] for y in ys] for x in range(min_length)]
+    y_los = [[y[x]["loss"] for y in ys] for x in range(min_length)]
+    y_par = [[y[x]["params"] for y in ys] for x in range(min_length)]
+
+    writer = FileWriter(path + 'summary' + '-', 'Summary ')
+    writer.write_to_file([])
+
+    writer.write_to_file(["ACCURACY"])
+    write_min_max(y_acc, writer)
+    write_stdev(y_acc, writer)
+    writer.write_to_file([])
+
+    writer.write_to_file(["LOSS"])
+    write_min_max(y_los, writer)
+    write_stdev(y_los, writer)
+    writer.write_to_file([])
+
+    writer.write_to_file(["PARAMETERS"])
+    write_min_max(y_par, writer)
+    write_stdev(y_par, writer)
+
+
+def write_min_max(data, writer):
+    min_val = float(inf)
+    max_val = 0
+    for i in data:
+        min_i = min(i)
+        max_i = max(i)
+        if min_i < min_val:
+            min_val = min_i
+        if max_i > max_val:
+            max_val = max_i
+
+    writer.write_to_file(['Min val', ' ' + str(min_val)])
+    writer.write_to_file(['Max val', ' ' + str(max_val)])
+
+def write_stdev(data, writer):
+    stdevs = [numpy.std(d) for d in data]
+
+    avg_stdev = numpy.mean(stdevs)
+    stdev_of_stdev = numpy.std(stdevs)
+
+    writer.write_to_file(['Average stdev', ' ' + str(avg_stdev)])
+    writer.write_to_file(['Stdev of stdev', ' ' + str(stdev_of_stdev)])
+
+
 def make_plot(data):
     global experiments, writer,\
            FOLDER_NAME, REPETITIONS, \
@@ -117,9 +171,10 @@ def make_plot(data):
            POPULATION_SIZE, MATING_POOL, MUTATION_RATE
 
     ys = []
-    ys = data #Need to only select the relevant stuff
+    ys = data # Need to only select the relevant stuff
 
-    #Makes sure that they have the same length, in case some of the repetitions get to make more generations than the rest
+    # Makes sure that they have the same length, in case some of
+    # the repetitions get to make more generations than the rest
     min_length = float("inf")
     for i in ys:
         if len(i) < min_length:
@@ -329,5 +384,6 @@ for exp in experiments:
             experiment_data.append(ga.history)
 
         writer.close()
+    write_summary(experiment_data)
     make_plot(experiment_data)
 
