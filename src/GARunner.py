@@ -13,6 +13,7 @@ import tensorflow as tf
 from tensorflow.keras import datasets
 import matplotlib.pyplot as plt
 
+from src.GA.CrossoverGA import CrossoverGA
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
@@ -39,7 +40,7 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
-    elif "Layers" in ALGORITHM:
+    elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
                               ga.history[-1]["layers"],
@@ -53,7 +54,7 @@ def notify():
                               ga.history[-1]["loss"]])
 
 
-def lonely_ga():
+def start_ga():
     global experiments, writer, ga,\
            FOLDER_NAME, REPETITIONS, \
            INPUT_SHAPE, OUTPUT_SHAPE, SCALING, DATASET_PERCENTAGE, DATASET, EPOCHS, MAX_RUNTIME, \
@@ -281,6 +282,9 @@ def choose_GA():
     # Lonely_GA variations
     elif "Lonely" in ALGORITHM:
         return LonelyGA(ALGORITHM)
+    # Crossover_GA variation
+    elif "Crossover" in ALGORITHM:
+        return CrossoverGA(ALGORITHM)
 
 
 gc.enable()
@@ -366,15 +370,15 @@ for exp in experiments:
 
         if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
-        elif "Layers" in ALGORITHM: # TODO opmærksom på senere ved nye algoritmer
+        elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM: # TODO opmærksom på senere ved nye algoritmer
             writer.write_to_file(['generation_no', 'params_no', 'layers_no', 'accuracy', 'loss'])
         else:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
 
-        if "Lonely" in ALGORITHM:
-            t = Thread(target=lonely_ga)
+        if "Lonely" in ALGORITHM or "Crossover" in ALGORITHM:
+            t = Thread(target=start_ga)
             t.daemon = True
             t.start()
             t.join(MAX_RUNTIME)
