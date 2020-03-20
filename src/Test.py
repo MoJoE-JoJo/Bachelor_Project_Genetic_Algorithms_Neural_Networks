@@ -74,13 +74,14 @@ if loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
 def comp():
     model = tf.keras.models.Sequential([
         tf.keras.layers.Flatten(input_shape=(28, 28)),
-        tf.keras.layers.Dense(128, activation=Activation.relu.name),
+        tf.keras.layers.Dense(100, activation=Activation.relu.name),
+        tf.keras.layers.Dense(100, activation=Activation.relu.name),
         tf.keras.layers.Dense(10, activation='softmax')
     ])
     model.compile(optimizer=optimizer.name,
                   loss=loss.name,
                   metrics=['accuracy'])
-
+    print(model.count_params())
     hist = model.fit(x_train, y_train, epochs=5, verbose=1)
     return hist.history['accuracy']
 
