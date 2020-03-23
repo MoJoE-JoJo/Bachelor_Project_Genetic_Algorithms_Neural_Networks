@@ -31,7 +31,7 @@ class LonelyAccDNAValidation:
     # uses the normalized mutations rates as probabilities for the number of mutations
     def mutate(self):
         mutation = random.uniform(0.0, 1.0)
-        if mutation <= self.mutation_rate:
+        if mutation > self.mutation_rate:
             return
         else:
             self.gene.mutate()
