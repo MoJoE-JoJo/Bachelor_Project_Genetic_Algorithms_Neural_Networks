@@ -16,7 +16,7 @@ from src.Genes.DenseGeneActivation import DenseGeneActivation
 from src.Genes.OverallGene import OverallGene
 
 
-class CrossoverDNAFunctions:
+class CrossoverDNAActivationOptimizer:
     history = None
     fitness = 0.0
     evaluated = 0.0

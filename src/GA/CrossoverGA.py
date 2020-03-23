@@ -10,20 +10,9 @@ import gc
 # from numba import cuda
 import tensorflow as tf
 
-from src.DNA.CrossoverDNAFunctions import CrossoverDNAFunctions
-from src.DNA.LonelyAccuracy.LonelyAccDNA import LonelyAccDNA
-from src.DNA.LonelyAccuracy.LonelyAccDNAParScale import LonelyAccDNAParScale
-from src.DNA.LonelyAccuracy.LonelyAccDNAValidation import LonelyAccDNAValidation
-from src.DNA.LonelyError.LonelyErrDNA import LonelyErrDNA
-from src.DNA.LonelyError.LonelyErrDNAParScale import LonelyErrDNAParScale
-from src.DNA.LonelyLoss.Fitness.LonelyLosDNAExpLoss import LonelyLosDNAExpLoss
-from src.DNA.LonelyLoss.Fitness.LonelyLosDNAOverallExp import LonelyLosDNAOverallExp
-from src.DNA.LonelyLoss.Fitness.LonelyLosDNAParScale import LonelyLosDNAParScale
+from src.DNA.CrossoverDNAActivationOptimizer import CrossoverDNAActivationOptimizer
 from src.DNA.LonelyLoss.Layers.CrossoverDNAMinLayers import CrossoverDNAMinLayers
-from src.DNA.LonelyLoss.Layers.LonelyLosDNALayers import LonelyLosDNALayers
 from src.DNA.LonelyLoss.Layers.LonelyLosDNALayersMutAll import LonelyLosDNALayersMutAll
-from src.DNA.LonelyLoss.Layers.LonelyLosDNALayersMutAllCopy import LonelyLosDNALayersMutAllCopy
-from src.DNA.LonelyLoss.LonelyLosDNA import LonelyLosDNA
 
 
 class CrossoverGA:
@@ -120,7 +109,7 @@ class CrossoverGA:
                     self.crossover_reproduction(new_population, p1_genes, p2_genes)
             elif self.GA_type == "Crossover_Min_Layers":
                 self.crossover_reproduction(new_population, p1_genes, p2_genes)
-            elif self.GA_type == "Crossover_Functions":
+            elif self.GA_type == "Crossover_Activation_Optimizer":
                 # if not possible to crossover parents do asexual reproduction
                 if len(p1_genes) == 1 and len(p2_genes) == 1:
                     self.asexual_reproduction(new_population, parents)
@@ -155,9 +144,9 @@ class CrossoverGA:
                                        self.loss, self.mutation_rate, c1_genes)
             c2 = CrossoverDNAMinLayers(self.initial_max_nodes, self.activation, self.optimizer,
                                        self.loss, self.mutation_rate, c2_genes)
-        elif self.GA_type == "Crossover_Functions":
-            c1 = CrossoverDNAFunctions(self.initial_max_nodes, self.loss, self.mutation_rate, c1_genes)
-            c2 = CrossoverDNAFunctions(self.initial_max_nodes, self.loss, self.mutation_rate, c2_genes)
+        elif self.GA_type == "Crossover_Activation_Optimizer":
+            c1 = CrossoverDNAActivationOptimizer(self.initial_max_nodes, self.loss, self.mutation_rate, c1_genes)
+            c2 = CrossoverDNAActivationOptimizer(self.initial_max_nodes, self.loss, self.mutation_rate, c2_genes)
 
         new_population.append(c1)
         new_population[-1].mutate()
@@ -172,7 +161,7 @@ class CrossoverGA:
                              "layers": len(self.population[0].genes),
                              "params": self.population[0].num_params})
 
-        if self.GA_type == "Crossover_Functions":
+        if self.GA_type == "Crossover_Activation_Optimizer":
             print(
                 "Generation {0} --- Optimizer: {1}, Loss: {2}, Layers: {3}, Fitness: {4: .4f}, Params: {5}"
                 .format(self.generation_counter,
@@ -201,6 +190,6 @@ class CrossoverGA:
             self.population = [CrossoverDNAMinLayers(self.initial_max_nodes, self.activation, self.optimizer,
                                                      self.loss, self.mutation_rate)
                                for i in range(self.population_size)]
-        elif self.GA_type == "Crossover_Functions":
-            self.population = [CrossoverDNAFunctions(self.initial_max_nodes, self.loss, self.mutation_rate)
+        elif self.GA_type == "Crossover_Activation_Optimizer":
+            self.population = [CrossoverDNAActivationOptimizer(self.initial_max_nodes, self.loss, self.mutation_rate)
                                for i in range(self.population_size)]
