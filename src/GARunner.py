@@ -13,7 +13,6 @@ import tensorflow as tf
 from tensorflow.keras import datasets
 import matplotlib.pyplot as plt
 
-from src.GA.CrossoverGA import CrossoverGA
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
@@ -23,6 +22,7 @@ from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
 from src.Enums.DatasetEnum import Dataset
 from src.SOTA.Simple_SimpleNet.SimpleNet_Runnable import SimpleNet
+from src.GA.CrossoverGA import CrossoverGA
 
 writer = None
 ga = None

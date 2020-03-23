@@ -1,3 +1,2 @@
 folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithm#yolo swagging fags#yolo swagging fags
-Crossover,2,"(28,28)",10,255.0,0.1,1,5,30,6,50,6,5,10,10,0.3,Crossover
-Crossover_Min_Layers,2,"(28,28)",10,255.0,0.1,1,5,30,6,50,6,5,10,10,0.3,Crossover_Min_Layers
+Crossover_Functions,2,"(28,28)",10,255.0,0.1,1,5,60,6,50,6,5,10,10,0.3,Crossover_Functions
