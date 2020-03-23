@@ -18,10 +18,9 @@ import matplotlib.pyplot as plt
 import matplotlib
 import time
 
-from src.GA.CrossoverGA import CrossoverGA
-
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
+from src.GA.CrossoverGA import CrossoverGA
 from src.GA.LonelyGA import LonelyGA
 from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss

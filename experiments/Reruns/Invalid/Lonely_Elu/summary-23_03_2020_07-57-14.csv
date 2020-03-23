@@ -1,0 +1,19 @@
+Summary ,23_03_2020_07-57-14
+
+ACCURACY
+Min val, 0.856
+Max val, 0.917
+Average stdev, 0.0060005486
+Stdev of stdev, 0.003358759
+
+LOSS
+Min val, 0.28289853072166443
+Max val, 0.46211665630340576
+Average stdev, 0.018062654710149006
+Stdev of stdev, 0.010632095561519079
+
+PARAMETERS
+Min val, 6370
+Max val, 653500
+Average stdev, 108019.95377991768
+Stdev of stdev, 84953.818061828
