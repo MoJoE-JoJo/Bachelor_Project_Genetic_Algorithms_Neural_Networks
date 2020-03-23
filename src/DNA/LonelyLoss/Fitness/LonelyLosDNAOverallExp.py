@@ -6,12 +6,12 @@ from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
 
 import random
-from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
-from src.Enums.OptimizerEnum import Optimizer
 from src.Genes.LonelyGene import LonelyGene
 
 
+# Contains a gene representing a dense layer in the neural network
+# with an initial number of neurons between 1 and a max value
 class LonelyLosDNAOverallExp:
     fitness = 0.0
     history = None
@@ -29,7 +29,7 @@ class LonelyLosDNAOverallExp:
         self.exponent = exponent
         self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
 
-    # uses the normalized mutations rates as probabilities for the number of mutations
+    # Mutates the gene based on a given mutation rate
     def mutate(self):
         mutation = random.uniform(0.0, 1.0)
         if mutation > self.mutation_rate:
@@ -37,6 +37,7 @@ class LonelyLosDNAOverallExp:
         else:
             self.gene.mutate()
 
+    # Calculates the fitness by training a neural network with the hyper parameters specified by the DNA
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling

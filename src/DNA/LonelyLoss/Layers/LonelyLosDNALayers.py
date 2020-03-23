@@ -10,7 +10,8 @@ from src.Enums.LossEnum import Loss
 from src.Genes.LonelyGene import LonelyGene
 
 
-# Contains a list of genes, initially of length 1
+# Contains a list of genes, each gene representing a dense layer in the
+# neural network with an initial number of neurons between 1 and a max value
 class LonelyLosDNALayers:
     fitness = 0.0
     evaluated = 0.0
@@ -27,7 +28,7 @@ class LonelyLosDNALayers:
         self.exponent = exponent
         self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
 
-    # check if the DNA should mutate
+    # Mutates the gene based on a given mutation rate
     def mutate(self):
         mutation = random.uniform(0.0, 1.0)
         if mutation > self.mutation_rate:
@@ -63,6 +64,7 @@ class LonelyLosDNALayers:
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))
 
+    # Calculates the fitness by training a neural network with the hyper parameters specified by the DNA
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
