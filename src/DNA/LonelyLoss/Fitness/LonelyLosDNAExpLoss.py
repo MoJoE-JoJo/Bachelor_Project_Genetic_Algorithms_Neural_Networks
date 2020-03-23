@@ -10,8 +10,6 @@ from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
 from src.Genes.LonelyGene import LonelyGene
-from src.Genes.SimpleGenes.DenseGene import DenseGene
-from src.Genes.SimpleGenes.OverallGene import OverallGene
 
 
 class LonelyLosDNAExpLoss:
