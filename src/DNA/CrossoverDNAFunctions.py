@@ -6,12 +6,17 @@ from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
 
 import random
-from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
 
+from src.Enums.ActivationEnum import Activation
+from src.Enums.LossEnum import Loss
+from src.Enums.OptimizerEnum import Optimizer
+from src.Genes.DenseGeneActivation import DenseGeneActivation
 
 # Contains a list of genes, initially of length 1
-class CrossoverDNAMinLayers:
+from src.Genes.OverallGene import OverallGene
+
+
+class CrossoverDNAFunctions:
     history = None
     fitness = 0.0
     evaluated = 0.0
@@ -19,16 +24,17 @@ class CrossoverDNAMinLayers:
     exponent = 4
     parameter_scaling = 0.33
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, genes=None):
+    def __init__(self, initial_max_nodes, loss, mutation_rate, genes=None):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
-        self.activation = activation
-        self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
         if genes is None:
-            self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1)),
-                          LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = [OverallGene(Optimizer(random.choice([5, 7]))),
+                          DenseGeneActivation(
+                              random.randrange(1, self.initial_max_nodes+1),
+                              Activation(random.choice([1, 6]))
+                          )]
         else:
             self.genes = genes
 
@@ -42,10 +48,10 @@ class CrossoverDNAMinLayers:
 
     # decide mutate type
     def do_mutate(self):
-        mutation_type = random.choice([1, 2])
-        if mutation_type == 1:
+        mutation_type = random.choice([0, 1])
+        if mutation_type == 0:
             self.mutate_gene()
-        elif mutation_type == 2:
+        elif mutation_type == 1:
             self.mutate_gene_no()
 
     # mutate a random gene (layer)
@@ -55,42 +61,38 @@ class CrossoverDNAMinLayers:
 
     # randomly add or remove a gene (layer)
     def mutate_gene_no(self):
-        # if the DNA contains only two genes the only possible mutation is to add a gene (layer)
-        if len(self.genes) == 2:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes + 1))]
+        # if the DNA contains only one gene (the overall gene) the only possible mutation is to add a gene (layer)
+        if len(self.genes) == 1:
+            self.genes = self.genes + [DenseGeneActivation(random.randrange(1, self.initial_max_nodes + 1),
+                                                           Activation(random.choice([1, 6])))]
+
+        # else either add or remove a gene (layer)
         else:
-            mutation_type = random.choice([1, 2])
+            mutation_type = random.choice([0, 1])
             # add layer
-            if mutation_type == 1:
-                self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            if mutation_type == 0:
+                self.genes = self.genes + [DenseGeneActivation(random.randrange(1, self.initial_max_nodes + 1),
+                                                               Activation(random.choice([1, 6])))]
             # remove layer
-            elif mutation_type == 2:
-                self.genes.pop(random.randrange(len(self.genes)))
+            elif mutation_type == 1:
+                self.genes.pop(random.randrange(1, len(self.genes)))  # Cannot pop first element (OverallGene)
 
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
 
-        #input_layer = [tf.keras.layers.Flatten(input_shape=input_shape)]
-        #hidden_layers = []
-        #if len(self.genes) > 0:
-        #    hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
-        #output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
-
-        #model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten(input_shape=input_shape))
         if len(self.genes) > 0:
-            for gene in self.genes:
-                model.add(tf.keras.layers.Dense(gene.node_count, activation=self.activation.name))
+            for gene in self.genes[1:]:
+                model.add(tf.keras.layers.Dense(gene.node_count, activation=gene.activation_function.name))
         model.add(tf.keras.layers.Dense(output_shape, activation='softmax'))
-
 
         if self.loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
             y_train = to_categorical(y_train, 10)
             y_test = to_categorical(y_test, 10)
 
-        model.compile(optimizer=self.optimizer.name,
+        model.compile(optimizer=self.genes[0].optimizer.name,
                       loss=self.loss.name,
                       metrics=['accuracy'])
 
