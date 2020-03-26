@@ -30,7 +30,6 @@ class CrossoverRandomInitialLayerNo:
         if genes is None:
             number_of_layers = random.randrange(1, 10+1)
             self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1)) for i in range(number_of_layers)]
-            print("Genes length: " + str(len(self.genes)))
         else:
             self.genes = genes
 
