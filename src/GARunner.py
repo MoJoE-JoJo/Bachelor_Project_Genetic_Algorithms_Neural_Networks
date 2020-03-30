@@ -127,6 +127,7 @@ def write_summary(data):
     y_par = [[y[x]["params"] for y in ys] for x in range(min_length)]
 
     writer = FileWriter(path + 'summary' + '-', 'Summary ')
+    writer.write_to_file([FOLDER_NAME])
     writer.write_to_file([])
 
     writer.write_to_file(["ACCURACY"])
