@@ -11,8 +11,9 @@ import gc
 import tensorflow as tf
 
 from src.DNA.CrossoverDNAActivationOptimizer import CrossoverDNAActivationOptimizer
-from src.DNA.CrossoverRandomInitialLayerNo import CrossoverRandomInitialLayerNo
-from src.DNA.LonelyLoss.Layers.CrossoverDNAMinLayers import CrossoverDNAMinLayers
+from src.DNA.CrossoverDNARandomInitialLayerNo import CrossoverDNARandomInitialLayerNo
+from src.DNA.CrossoverDNAMinLayers import CrossoverDNAMinLayers
+from src.DNA.CrossoverDNAValidation import CrossoverDNAValidation
 from src.DNA.LonelyLoss.Layers.LonelyLosDNALayersMutAll import LonelyLosDNALayersMutAll
 
 
@@ -101,7 +102,7 @@ class CrossoverGA:
             parents = random.choices(matingpool, weights=fitness, k=2)  # .choices normalizes the weights
             p1_genes = parents[0].genes
             p2_genes = parents[1].genes
-            if self.GA_type == "Crossover" or self.GA_type == "Crossover_Random_Initial_Layer_No":
+            if self.GA_type in ["Crossover","Crossover_Random_Initial_Layer_No", "Crossover_Validation"]:
                 # if not possible to crossover parents do asexual reproduction
                 if (len(p1_genes) == 0 or len(p2_genes) == 0) or (len(p1_genes) == 1 and len(p2_genes) == 1):
                     self.asexual_reproduction(new_population, parents)
@@ -149,10 +150,15 @@ class CrossoverGA:
             c1 = CrossoverDNAActivationOptimizer(self.initial_max_nodes, self.loss, self.mutation_rate, c1_genes)
             c2 = CrossoverDNAActivationOptimizer(self.initial_max_nodes, self.loss, self.mutation_rate, c2_genes)
         elif self.GA_type == "Crossover_Random_Initial_Layer_No":
-            c1 = CrossoverRandomInitialLayerNo(self.initial_max_nodes, self.activation, self.optimizer,
-                                               self.loss, self.mutation_rate, c1_genes)
-            c2 = CrossoverRandomInitialLayerNo(self.initial_max_nodes, self.activation, self.optimizer,
-                                               self.loss, self.mutation_rate, c2_genes)
+            c1 = CrossoverDNARandomInitialLayerNo(self.initial_max_nodes, self.activation, self.optimizer,
+                                                  self.loss, self.mutation_rate, c1_genes)
+            c2 = CrossoverDNARandomInitialLayerNo(self.initial_max_nodes, self.activation, self.optimizer,
+                                                  self.loss, self.mutation_rate, c2_genes)
+        elif self.GA_type == "Crossover_Validation":
+            c1 = CrossoverDNAValidation(self.initial_max_nodes, self.activation, self.optimizer,
+                                        self.loss, self.mutation_rate, c1_genes)
+            c2 = CrossoverDNAValidation(self.initial_max_nodes, self.activation, self.optimizer,
+                                        self.loss, self.mutation_rate, c2_genes)
 
         new_population.append(c1)
         new_population[-1].mutate()
@@ -205,8 +211,11 @@ class CrossoverGA:
                                for i in range(self.population_size)]
 
         elif self.GA_type == "Crossover_Random_Initial_Layer_No":
-            self.population = [CrossoverRandomInitialLayerNo(self.initial_max_nodes, self.activation, self.optimizer,
-                                                             self.loss, self.mutation_rate)
+            self.population = [CrossoverDNARandomInitialLayerNo(self.initial_max_nodes, self.activation, self.optimizer,
+                                                                self.loss, self.mutation_rate)
                                for i in range(self.population_size)]
 
-
+        elif self.GA_type == "Crossover_Validation":
+            self.population = [CrossoverDNAValidation(self.initial_max_nodes, self.activation, self.optimizer,
+                                                      self.loss, self.mutation_rate)
+                               for i in range(self.population_size)]
