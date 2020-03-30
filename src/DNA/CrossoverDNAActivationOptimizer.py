@@ -21,7 +21,7 @@ class CrossoverDNAActivationOptimizer:
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
-    exponent = 4
+    exponent = 3
     parameter_scaling = 0.33
 
     def __init__(self, initial_max_nodes, loss, mutation_rate, genes=None):
