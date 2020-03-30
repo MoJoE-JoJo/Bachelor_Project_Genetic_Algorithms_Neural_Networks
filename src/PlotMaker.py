@@ -30,16 +30,18 @@ for line in data:
 
 experiments.append(tempList)
 
+experiments = list(filter(lambda x: not(x[0]['name'] == ''), experiments))
+
 def make_plot_accuracy():
     plt.style.use('classic')
-    fig, axes = plt.subplots(1, figsize=(12, 5))
+    fig, axes = plt.subplots(1, figsize=(12.5, 5))
     fig.suptitle('Average Accuracy')
 
     x=[]
     y=[]
     for exp in experiments:
-        x.append([float(line['generation']) for line in exp])
-        y.append([float(line['avg acc']) for line in exp])
+        x.append([float(line['generation']) for line in exp if not(line['generation'] == '')])
+        y.append([float(line['avg acc']) for line in exp if not(line['generation'] == '')])
 
     longest_x = []
     for list in x:
@@ -56,12 +58,12 @@ def make_plot_accuracy():
     #axes.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
     names = [exp[0]['name'] for exp in experiments]
     for i in range(0,len(x)):
-        axes.plot(x[i],y[i], label=names[i])
+        axes.plot(x[i],y[i], label=names[i], linewidth=1.2)
 
     fontP = FontProperties()
     fontP.set_size('small')
     box = axes.get_position()
-    axes.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    axes.set_position([box.x0, box.y0, box.width * 0.75, box.height])
     axes.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop=fontP)
 
 
@@ -69,14 +71,14 @@ def make_plot_accuracy():
 
 def make_plot_loss():
     plt.style.use('classic')
-    fig, axes = plt.subplots(1, figsize=(12, 5))
+    fig, axes = plt.subplots(1, figsize=(12.5, 5))
     fig.suptitle('Average Loss')
 
     x=[]
     y=[]
     for exp in experiments:
-        x.append([float(line['generation']) for line in exp])
-        y.append([float(line['avg los']) for line in exp])
+        x.append([float(line['generation']) for line in exp if not(line['generation'] == '')])
+        y.append([float(line['avg los']) for line in exp if not(line['generation'] == '')])
 
     longest_x = []
     for list in x:
@@ -93,12 +95,12 @@ def make_plot_loss():
     #axes.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
     names = [exp[0]['name'] for exp in experiments]
     for i in range(0,len(x)):
-        axes.plot(x[i],y[i], label=names[i])
+        axes.plot(x[i],y[i], label=names[i], linewidth=1.2)
 
     fontP = FontProperties()
     fontP.set_size('small')
     box = axes.get_position()
-    axes.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    axes.set_position([box.x0, box.y0, box.width * 0.75, box.height])
     axes.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop=fontP)
 
 
@@ -106,14 +108,14 @@ def make_plot_loss():
 
 def make_plot_parameters():
     plt.style.use('classic')
-    fig, axes = plt.subplots(1, figsize=(12, 5))
+    fig, axes = plt.subplots(1, figsize=(12.5, 5))
     fig.suptitle('Average Amount of Parameters')
 
     x=[]
     y=[]
     for exp in experiments:
-        x.append([float(line['generation']) for line in exp])
-        y.append([float(line['avg par']) for line in exp])
+        x.append([float(line['generation']) for line in exp if not(line['generation'] == '')])
+        y.append([float(line['avg par']) for line in exp if not(line['generation'] == '')])
 
     longest_x = []
     for list in x:
@@ -130,20 +132,17 @@ def make_plot_parameters():
     axes.get_yaxis().set_major_formatter(plt.FuncFormatter(lambda x, loc: "{:,}".format(int(x))))
     names = [exp[0]['name'] for exp in experiments]
     for i in range(0,len(x)):
-        axes.plot(x[i],y[i], label=names[i])
+        axes.plot(x[i],y[i], label=names[i], linewidth=1.2)
 
     fontP = FontProperties()
     fontP.set_size('small')
     box = axes.get_position()
-    axes.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    axes.set_position([box.x0, box.y0, box.width * 0.75, box.height])
     axes.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop=fontP)
 
 
     plt.savefig(fname=("plot_par.svg"))
 
-if sys.argv[2] == 'acc':
-    make_plot_accuracy()
-elif sys.argv[2] == 'los':
-    make_plot_loss()
-elif sys.argv[2] == 'par':
-    make_plot_parameters()
+make_plot_accuracy()
+make_plot_loss()
+make_plot_parameters()

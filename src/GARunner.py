@@ -321,8 +321,12 @@ for exp in experiments:
     OUTPUT_SHAPE = int(exp["output_shape"])
     SCALING = float(exp["scaling"])
     DATASET_PERCENTAGE = float(exp["dataset_percentage"])
-    if Dataset(int(exp["data_set"])) == Dataset.mnist:
+    if exp["data_set"] == Dataset.mnist.name:
         DATASET = datasets.mnist.load_data()
+    elif exp["data_set"] == Dataset.fashion_mnist.name:
+        DATASET = datasets.fashion_mnist.load_data()
+    elif exp["data_set"] == Dataset.cifar10.name:
+        DATASET = datasets.cifar10.load_data()
     else:
         DATASET = datasets.mnist.load_data()
     EPOCHS = int(exp["epochs"])
@@ -353,7 +357,7 @@ for exp in experiments:
         writer.write_to_file(['epochs ', EPOCHS])
         writer.write_to_file(['max_runtime', MAX_RUNTIME])
         writer.write_to_file(['dataset_percentage', DATASET_PERCENTAGE])
-        writer.write_to_file(['dataset', Dataset(int(exp["data_set"])).name])
+        writer.write_to_file(['dataset', exp["data_set"]])
         writer.write_to_file([])
 
         writer.write_to_file(['Hyper parameters'])
