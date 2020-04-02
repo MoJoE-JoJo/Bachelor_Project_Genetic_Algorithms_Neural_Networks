@@ -282,7 +282,7 @@ def make_plot(data):
 
 def choose_GA():
     if ALGORITHM == "SimpleNet":
-        return SimpleNet()
+        return SimpleNet(INPUT_SHAPE, OUTPUT_SHAPE, DATASET, DATASET_PERCENTAGE, SCALING)
     # Lonely_GA variations
     elif "Lonely" in ALGORITHM:
         return LonelyGA(ALGORITHM)
