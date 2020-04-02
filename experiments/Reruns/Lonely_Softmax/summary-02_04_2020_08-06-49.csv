@@ -1,0 +1,20 @@
+Summary ,02_04_2020_08-06-49
+Lonely_Softmax
+
+ACCURACY
+Min val, 0.748
+Max val, 0.896
+Average stdev, 0.022990532
+Stdev of stdev, 0.011609813
+
+LOSS
+Min val, 1.0314483852386476
+Max val, 1.204421215057373
+Average stdev, 0.01898739763422621
+Stdev of stdev, 0.010577200004088197
+
+PARAMETERS
+Min val, 9550
+Max val, 5669950
+Average stdev, 339532.613037781
+Stdev of stdev, 394450.83985318034

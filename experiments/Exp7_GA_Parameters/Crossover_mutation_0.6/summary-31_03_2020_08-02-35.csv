@@ -1,0 +1,20 @@
+Summary ,31_03_2020_08-02-35
+Crossover_mutation_0.6
+
+ACCURACY
+Min val, 0.906
+Max val, 0.962
+Average stdev, 0.0039129434
+Stdev of stdev, 0.002458761
+
+LOSS
+Min val, 0.15399264497309922
+Max val, 0.4344305427670479
+Average stdev, 0.01567897187899861
+Stdev of stdev, 0.014371755401792018
+
+PARAMETERS
+Min val, 28635
+Max val, 4993405
+Average stdev, 387021.9961682514
+Stdev of stdev, 437044.04520114313
