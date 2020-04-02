@@ -205,7 +205,7 @@ class SimpleNet:
 
         tc1 = time.time()
         while counter <= iterations:
-            self.model.fit(self.x_train, self.y_train, epochs=epochs_pr_it, verbose=1)
+            self.model.fit(self.x_train, self.y_train, epochs=epochs_pr_it, verbose=0)
             epochs_run += epochs_pr_it
             hist = self.model.evaluate(self.x_test, self.y_test, verbose=0)
 
@@ -213,6 +213,6 @@ class SimpleNet:
             tc1 = time.time()
 
             self.history.append({"epoch": counter, "loss": hist[0], "accuracy": hist[1], "accumulated_time": timer, "params": self.model.count_params()})
-            print(self.history)
+            print(self.history[-1])
             counter += 1
             notify()
