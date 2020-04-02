@@ -174,7 +174,7 @@ def make_plot(data):
            FOLDER_NAME, REPETITIONS, \
            INPUT_SHAPE, OUTPUT_SHAPE, SCALING, DATASET_PERCENTAGE, DATASET, EPOCHS, MAX_RUNTIME, \
            ACTIVATION_FUNCTION, INITIAL_MAX_NODES, LOSS_FUNCTION, OPTIMIZER, \
-           POPULATION_SIZE, MATING_POOL, MUTATION_RATE
+           POPULATION_SIZE, MATING_POOL, MUTATION_RATE, DATASET_NAME
 
     ys = []
     ys = data # Need to only select the relevant stuff
@@ -241,9 +241,33 @@ def make_plot(data):
         ax_los.set(xlabel='', ylabel='loss')
         ax_params.set(xlabel='generation', ylabel='parameters')
 
-    acc_bl_val = 0.984  # Found as the averages of epoch 25-80 of SimpleNet baseline
-    los_bl_val = 0.0896  # Found as the averages of epoch 25-80 of SimpleNet baseline
-    params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
+    acc_bl_val = 0
+    los_bl_val = 0
+    params_bl_val = 0
+    if DATASET_NAME == Dataset.mnist.name:
+        if DATASET_PERCENTAGE == 0.1:
+            acc_bl_val = 0.984  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.0896  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        elif DATASET_PERCENTAGE == 1.0:
+            acc_bl_val = 0  # TODO # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
+    elif DATASET_NAME == Dataset.fashion_mnist.name:
+        if DATASET_PERCENTAGE == 0.1:
+            acc_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        elif DATASET_PERCENTAGE == 1.0:
+            acc_bl_val = 0  # TODO # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
+    elif DATASET_NAME == Dataset.cifar10.name:
+        if DATASET_PERCENTAGE == 0.1:
+            acc_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        elif DATASET_PERCENTAGE == 1.0:
+            acc_bl_val = 0  # TODO # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 0  # TODO  # Found by using param_count() on our implementation of SimpleNet
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
@@ -322,6 +346,7 @@ for exp in experiments:
     OUTPUT_SHAPE = int(exp["output_shape"])
     SCALING = float(exp["scaling"])
     DATASET_PERCENTAGE = float(exp["dataset_percentage"])
+    DATASET_NAME = exp["data_set"]
     if exp["data_set"] == Dataset.mnist.name:
         DATASET = datasets.mnist.load_data()
     elif exp["data_set"] == Dataset.fashion_mnist.name:

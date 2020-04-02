@@ -216,5 +216,3 @@ class SimpleNet:
             print(self.history)
             counter += 1
             notify()
-
-
