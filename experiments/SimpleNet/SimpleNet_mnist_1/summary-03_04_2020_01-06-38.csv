@@ -1,0 +1,20 @@
+Summary ,03_04_2020_01-06-38
+SimpleNet_mnist_1
+
+ACCURACY
+Min val, 0.9787
+Max val, 0.9966
+Average stdev, 0.00061220105
+Stdev of stdev, 0.00062570954
+
+LOSS
+Min val, 0.018757951596006753
+Max val, 0.07661006295559927
+Average stdev, 0.0029273261733595668
+Stdev of stdev, 0.002353462930867899
+
+PARAMETERS
+Min val, 1442954
+Max val, 1442954
+Average stdev, 0.0
+Stdev of stdev, 0.0
