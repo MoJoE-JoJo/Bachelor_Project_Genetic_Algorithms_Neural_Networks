@@ -249,25 +249,25 @@ def make_plot(data):
             acc_bl_val = 0.984  # Found as the averages of epoch 25-80 of SimpleNet baseline
             los_bl_val = 0.0896  # Found as the averages of epoch 25-80 of SimpleNet baseline
         elif DATASET_PERCENTAGE == 1.0:
-            acc_bl_val = 0  # TODO # Found as the averages of epoch 25-80 of SimpleNet baseline
-            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            acc_bl_val = 0.995  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.0296  # Found as the averages of epoch 25-80 of SimpleNet baseline
         params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
     elif DATASET_NAME == Dataset.fashion_mnist.name:
         if DATASET_PERCENTAGE == 0.1:
-            acc_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
-            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            acc_bl_val = 0.902  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.4366  # Found as the averages of epoch 25-80 of SimpleNet baseline
         elif DATASET_PERCENTAGE == 1.0:
-            acc_bl_val = 0  # TODO # Found as the averages of epoch 25-80 of SimpleNet baseline
-            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            acc_bl_val = 0.937  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.2480  # Found as the averages of epoch 25-80 of SimpleNet baseline
         params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
     elif DATASET_NAME == Dataset.cifar10.name:
         if DATASET_PERCENTAGE == 0.1:
-            acc_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
-            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            acc_bl_val = 0.683  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 1.2256  # Found as the averages of epoch 25-80 of SimpleNet baseline
         elif DATASET_PERCENTAGE == 1.0:
-            acc_bl_val = 0  # TODO # Found as the averages of epoch 25-80 of SimpleNet baseline
-            los_bl_val = 0  # TODO  # Found as the averages of epoch 25-80 of SimpleNet baseline
-        params_bl_val = 0  # TODO  # Found by using param_count() on our implementation of SimpleNet
+            acc_bl_val = 0.868  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.4410  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 1444106
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
