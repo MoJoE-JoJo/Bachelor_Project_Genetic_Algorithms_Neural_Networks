@@ -44,7 +44,6 @@ from src.Enums.LossEnum import Loss
 #print('third', two - one)
 #print('print', four - three)
 
-import matplotlib.pyplot as plt
 
 
 mnist = tf.keras.datasets.cifar10

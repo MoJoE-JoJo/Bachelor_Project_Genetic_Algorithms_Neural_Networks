@@ -1,0 +1,20 @@
+Summary ,09_04_2020_07-25-10
+Lonely_SGD
+
+ACCURACY
+Min val, 0.8
+Max val, 0.875
+Average stdev, 0.007538649
+Stdev of stdev, 0.0040530036
+
+LOSS
+Min val, 0.48756238555908205
+Max val, 0.672501823425293
+Average stdev, 0.023319259633958426
+Stdev of stdev, 0.010882365119529827
+
+PARAMETERS
+Min val, 8755
+Max val, 1546285
+Average stdev, 114879.40540725127
+Stdev of stdev, 134488.65870398452

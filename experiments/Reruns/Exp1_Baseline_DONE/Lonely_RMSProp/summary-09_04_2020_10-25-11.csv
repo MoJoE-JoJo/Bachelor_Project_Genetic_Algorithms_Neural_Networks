@@ -1,0 +1,20 @@
+Summary ,09_04_2020_10-25-11
+Lonely_RMSProp
+
+ACCURACY
+Min val, 0.878
+Max val, 0.951
+Average stdev, 0.01146061
+Stdev of stdev, 0.0047705686
+
+LOSS
+Min val, 0.17994538639485835
+Max val, 0.4445149194225669
+Average stdev, 0.03637387754205595
+Stdev of stdev, 0.015570195944263012
+
+PARAMETERS
+Min val, 12730
+Max val, 3223735
+Average stdev, 298609.44904875185
+Stdev of stdev, 298425.3971652153

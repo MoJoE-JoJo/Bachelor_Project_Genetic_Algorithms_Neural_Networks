@@ -1,0 +1,20 @@
+Summary ,09_04_2020_04-25-08
+Lonely_Adamax
+
+ACCURACY
+Min val, 0.849
+Max val, 0.943
+Average stdev, 0.017543118
+Stdev of stdev, 0.006199703
+
+LOSS
+Min val, 0.1727517905831337
+Max val, 0.5272874369621277
+Average stdev, 0.07376814468082406
+Stdev of stdev, 0.026190973648306016
+
+PARAMETERS
+Min val, 11935
+Max val, 23062165
+Average stdev, 1791246.2640407523
+Stdev of stdev, 2583026.421693561

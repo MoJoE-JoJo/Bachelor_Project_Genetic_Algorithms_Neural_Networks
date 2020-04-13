@@ -401,9 +401,9 @@ for exp in experiments:
 
         writer.write_to_file(['OUTPUT'])
 
-        if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
+        if ALGORITHM == "SimpleNet":
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
-        elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM: # TODO opmærksom på senere ved nye algoritmer
+        elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM:
             writer.write_to_file(['generation_no', 'params_no', 'layers_no', 'accuracy', 'loss'])
         else:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
