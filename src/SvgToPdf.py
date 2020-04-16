@@ -5,6 +5,7 @@ from os.path import isfile, join
 import sys
 
 files = [f for f in listdir('.') if isfile(f)]
+files = [f for f in files if f.split(".")[1]=="svg"]
 
 for f in files:
     print(f.title())
