@@ -16,7 +16,7 @@ class LonelyLosDNALayers:
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
-    parameter_scaling = 0.33
+    parameter_scaling = 0.1
 
     def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent):
         gc.enable()
