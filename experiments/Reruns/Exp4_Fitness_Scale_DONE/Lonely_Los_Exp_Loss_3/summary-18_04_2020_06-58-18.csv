@@ -1,0 +1,20 @@
+Summary ,18_04_2020_06-58-18
+Lonely_Los_Exp_Loss_3
+
+ACCURACY
+Min val, 0.899
+Max val, 0.958
+Average stdev, 0.004401302
+Stdev of stdev, 0.0024790666
+
+LOSS
+Min val, 0.15152575835585594
+Max val, 0.2975991518497467
+Average stdev, 0.013616951009443072
+Stdev of stdev, 0.007814260025436868
+
+PARAMETERS
+Min val, 35785
+Max val, 5987155
+Average stdev, 462768.77087974496
+Stdev of stdev, 365967.62380802416

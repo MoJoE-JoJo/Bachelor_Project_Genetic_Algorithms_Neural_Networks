@@ -14,7 +14,6 @@ from src.Genes.LonelyGene import LonelyGene
 # Contains a list of genes, each gene representing a dense layer in the
 # neural network with an initial number of neurons between 1 and a max value
 class LonelyLosDNALayersMutAllCopy:
-    scaling = 0.33
     history = None
     fitness = 0.0
     evaluated = 0.0
