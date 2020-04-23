@@ -1,0 +1,20 @@
+Summary ,23_04_2020_05-34-04
+Crossover_epochs10_population5
+
+ACCURACY
+Min val, 0.877
+Max val, 0.962
+Average stdev, 0.0035488904
+Stdev of stdev, 0.002786086
+
+LOSS
+Min val, 0.15511598183214664
+Max val, 0.5244923257827758
+Average stdev, 0.014018239626890552
+Stdev of stdev, 0.014961724696487412
+
+PARAMETERS
+Min val, 18950
+Max val, 6819675
+Average stdev, 668647.6827766057
+Stdev of stdev, 588927.4022895319
