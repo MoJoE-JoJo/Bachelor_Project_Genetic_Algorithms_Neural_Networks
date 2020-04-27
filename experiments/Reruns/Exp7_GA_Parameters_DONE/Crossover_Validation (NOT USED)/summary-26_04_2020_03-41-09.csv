@@ -1,0 +1,20 @@
+Summary ,26_04_2020_03-41-09
+Crossover_Validation
+
+ACCURACY
+Min val, 0.875
+Max val, 0.958
+Average stdev, 0.005316321
+Stdev of stdev, 0.0037936172
+
+LOSS
+Min val, 0.1537187040746212
+Max val, 0.4688950770497322
+Average stdev, 0.020587378819748238
+Stdev of stdev, 0.01915162279985587
+
+PARAMETERS
+Min val, 11742
+Max val, 6182781
+Average stdev, 388694.77652212186
+Stdev of stdev, 571212.1352465027
