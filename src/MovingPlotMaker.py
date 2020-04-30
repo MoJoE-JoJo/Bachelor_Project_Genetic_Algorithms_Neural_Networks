@@ -78,6 +78,7 @@ def make_plot_accuracy():
     box = axes.get_position()
     axes.set_position([box.x0, box.y0, box.width * 0.75, box.height])
     axes.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop=fontP)
+    axes.ticklabel_format(useOffset=False)
 
 
     plt.savefig(fname=("moving_plot_acc.svg"))
