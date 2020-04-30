@@ -1,1 +1,5 @@
-folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithmTest_Layers,1,"(28,28)",10,255.0,0.1,1,5,120,6,50,6,5,10,10,0.3,Lonely_GA_Layers
+folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithm
+
+#yolo swagging facts
+Lonely_Loss_GA,3,"(28,28)",10,255.0,0.1,mnist,5,3600,6,50,6,5,10,10,0.8,Lonely_Loss_GA
+Lonely_Error_GA,3,"(28,28)",10,255.0,0.1,mnist,5,3600,6,50,6,5,10,10,0.8,Lonely_Error_GA

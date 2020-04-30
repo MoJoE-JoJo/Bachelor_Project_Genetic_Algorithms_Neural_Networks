@@ -1,0 +1,20 @@
+Summary ,22_04_2020_06-44-47
+Crossover_Activation_Optimizer
+
+ACCURACY
+Min val, 0.857
+Max val, 0.957
+Average stdev, 0.0078569595
+Stdev of stdev, 0.0061870264
+
+LOSS
+Min val, 0.16915418606996535
+Max val, 0.608665949344635
+Average stdev, 0.028001753604916177
+Stdev of stdev, 0.027018944945965427
+
+PARAMETERS
+Min val, 26076
+Max val, 1135910
+Average stdev, 96173.78474077595
+Stdev of stdev, 102156.622424194

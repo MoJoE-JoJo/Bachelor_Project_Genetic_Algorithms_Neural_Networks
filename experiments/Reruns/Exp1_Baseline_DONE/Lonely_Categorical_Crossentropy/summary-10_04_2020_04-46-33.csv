@@ -1,0 +1,20 @@
+Summary ,10_04_2020_04-46-33
+Lonely_Categorical_Crossentropy
+
+ACCURACY
+Min val, 0.791
+Max val, 0.889
+Average stdev, 0.009380527
+Stdev of stdev, 0.004763097
+
+LOSS
+Min val, 0.40878973960876464
+Max val, 0.7487371606826783
+Average stdev, 0.03931648200906799
+Stdev of stdev, 0.019537923678533402
+
+PARAMETERS
+Min val, 5575
+Max val, 3811240
+Average stdev, 262867.32552597416
+Stdev of stdev, 331886.0327538455

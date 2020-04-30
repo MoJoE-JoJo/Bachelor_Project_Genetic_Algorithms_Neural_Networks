@@ -1,0 +1,20 @@
+Summary ,02_04_2020_02-06-47
+Lonely_Elu
+
+ACCURACY
+Min val, 0.226
+Max val, 0.915
+Average stdev, 0.030292485
+Stdev of stdev, 0.059264343
+
+LOSS
+Min val, 0.2735274200439453
+Max val, 1.9282568683624268
+Average stdev, 0.09106531825731586
+Stdev of stdev, 0.1555257504245569
+
+PARAMETERS
+Min val, 805
+Max val, 1264855
+Average stdev, 109669.3613610243
+Stdev of stdev, 109913.9440345287

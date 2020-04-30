@@ -1,0 +1,20 @@
+Summary ,26_04_2020_09-41-11
+Crossover_max_neurons_100
+
+ACCURACY
+Min val, 0.915
+Max val, 0.961
+Average stdev, 0.003819503
+Stdev of stdev, 0.0023645712
+
+LOSS
+Min val, 0.15803078681975602
+Max val, 0.3255777914226055
+Average stdev, 0.014122180600094644
+Stdev of stdev, 0.010418415040785018
+
+PARAMETERS
+Min val, 57585
+Max val, 3923335
+Average stdev, 419752.760232301
+Stdev of stdev, 413723.4339978286

@@ -27,16 +27,17 @@ weight_decay = 0.00000005 # it is very small, this is 50 nano, it converges fast
 
 initial_bias_constant = 0.1
 
-img_rows = 28
-img_cols = 28
+img_rows = 32
+img_cols = 32
+channels = 3
 
-(x_train, y_train), (x_test, y_test) = datasets.mnist.load_data()
+(x_train, y_train), (x_test, y_test) = datasets.cifar10.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
-x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
-x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
+x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, channels)
+x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, channels)
 
-input_shape = (img_rows, img_cols, 1)
+input_shape = (img_rows, img_cols, channels)
 
 model = tf.keras.models.Sequential([
 

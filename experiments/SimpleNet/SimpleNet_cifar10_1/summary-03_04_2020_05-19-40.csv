@@ -1,0 +1,20 @@
+Summary ,03_04_2020_05-19-40
+SimpleNet_cifar10_1
+
+ACCURACY
+Min val, 0.5136
+Max val, 0.8793
+Average stdev, 0.003748271
+Stdev of stdev, 0.0031091752
+
+LOSS
+Min val, 0.4179878992557526
+Max val, 1.3721605562210084
+Average stdev, 0.013204810309643943
+Stdev of stdev, 0.010038889381552282
+
+PARAMETERS
+Min val, 1444106
+Max val, 1444106
+Average stdev, 0.0
+Stdev of stdev, 0.0

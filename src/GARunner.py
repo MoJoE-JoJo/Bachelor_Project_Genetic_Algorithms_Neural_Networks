@@ -5,30 +5,31 @@ import os.path
 import sys
 import gc
 import csv
+from math import inf
+
+import numpy
+import re
 from ast import literal_eval as make_tuple
+from threading import Thread
 
 import tensorflow as tf
 from tensorflow.keras import datasets
 import matplotlib.pyplot as plt
-import matplotlib
-import time
-
-
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))  # Used to find modules when running from venv
 from src.FileWriter import FileWriter
-from src.GA.SimpleGA import SimpleGA
+from src.GA.CrossoverGA import CrossoverGA
 from src.GA.LonelyGA import LonelyGA
-from src.GA.LonelyErrorGA import LonelyErrorGA
-from src.GA.LonelyLossGA import LonelyLossGA
 from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 from src.Enums.OptimizerEnum import Optimizer
 from src.Enums.DatasetEnum import Dataset
 from src.SOTA.Simple_SimpleNet.SimpleNet_Runnable import SimpleNet
 
+
 writer = None
 ga = None
+
 
 def write_to_file(data):
     print("Writing")
@@ -42,7 +43,7 @@ def notify():
                               ga.history[-1]["accumulated_time"],
                               ga.history[-1]["accuracy"],
                               ga.history[-1]["loss"]])
-    elif ALGORITHM == "Lonely_GA_Layers":
+    elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM:
         writer.write_to_file([ga.history[-1]["generation"],
                               ga.history[-1]["params"],
                               ga.history[-1]["layers"],
@@ -56,7 +57,7 @@ def notify():
                               ga.history[-1]["loss"]])
 
 
-def lonely_ga():
+def start_ga():
     global experiments, writer, ga,\
            FOLDER_NAME, REPETITIONS, \
            INPUT_SHAPE, OUTPUT_SHAPE, SCALING, DATASET_PERCENTAGE, DATASET, EPOCHS, MAX_RUNTIME, \
@@ -112,17 +113,74 @@ def initialize_tf():
     model.fit(x_train[:10], y_train[:10], epochs=1, verbose=0)
 
 
+def write_summary(data):
+    # prepare data
+    ys = data
+    min_length = float("inf")
+    for i in ys:
+        if len(i) < min_length:
+            min_length = len(i)
+    ys = [i[:min_length] for i in ys]
+
+    y_acc = [[y[x]["accuracy"] for y in ys] for x in range(min_length)]
+    y_los = [[y[x]["loss"] for y in ys] for x in range(min_length)]
+    y_par = [[y[x]["params"] for y in ys] for x in range(min_length)]
+
+    writer = FileWriter(path + 'summary' + '-', 'Summary ')
+    writer.write_to_file([FOLDER_NAME])
+    writer.write_to_file([])
+
+    writer.write_to_file(["ACCURACY"])
+    write_min_max(y_acc, writer)
+    write_stdev(y_acc, writer)
+    writer.write_to_file([])
+
+    writer.write_to_file(["LOSS"])
+    write_min_max(y_los, writer)
+    write_stdev(y_los, writer)
+    writer.write_to_file([])
+
+    writer.write_to_file(["PARAMETERS"])
+    write_min_max(y_par, writer)
+    write_stdev(y_par, writer)
+
+
+def write_min_max(data, writer):
+    min_val = float(inf)
+    max_val = 0
+    for i in data:
+        min_i = min(i)
+        max_i = max(i)
+        if min_i < min_val:
+            min_val = min_i
+        if max_i > max_val:
+            max_val = max_i
+
+    writer.write_to_file(['Min val', ' ' + str(min_val)])
+    writer.write_to_file(['Max val', ' ' + str(max_val)])
+
+def write_stdev(data, writer):
+    stdevs = [numpy.std(d) for d in data]
+
+    avg_stdev = numpy.mean(stdevs)
+    stdev_of_stdev = numpy.std(stdevs)
+
+    writer.write_to_file(['Average stdev', ' ' + str(avg_stdev)])
+    writer.write_to_file(['Stdev of stdev', ' ' + str(stdev_of_stdev)])
+
+
 def make_plot(data):
     global experiments, writer,\
            FOLDER_NAME, REPETITIONS, \
            INPUT_SHAPE, OUTPUT_SHAPE, SCALING, DATASET_PERCENTAGE, DATASET, EPOCHS, MAX_RUNTIME, \
            ACTIVATION_FUNCTION, INITIAL_MAX_NODES, LOSS_FUNCTION, OPTIMIZER, \
-           POPULATION_SIZE, MATING_POOL, MUTATION_RATE
+           POPULATION_SIZE, MATING_POOL, MUTATION_RATE, DATASET_NAME
 
     ys = []
-    ys = data #Need to only select the relevant stuff
+    ys = data # Need to only select the relevant stuff
 
-    #Makes sure that they have the same length, in case some of the repetitions get to make more generations than the rest
+    # Makes sure that they have the same length, in case some of
+    # the repetitions get to make more generations than the rest
     min_length = float("inf")
     for i in ys:
         if len(i) < min_length:
@@ -183,12 +241,37 @@ def make_plot(data):
         ax_los.set(xlabel='', ylabel='loss')
         ax_params.set(xlabel='generation', ylabel='parameters')
 
-    acc_bl_val = 0.984  # Found as the averages of epoch 25-80 of SimpleNet baseline
-    los_bl_val = 0.0896  # Found as the averages of epoch 25-80 of SimpleNet baseline
-    params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
+    acc_bl_val = 0
+    los_bl_val = 0
+    params_bl_val = 0
+    if DATASET_NAME == Dataset.mnist.name:
+        if DATASET_PERCENTAGE == 0.1:
+            acc_bl_val = 0.984  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.0896  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        elif DATASET_PERCENTAGE == 1.0:
+            acc_bl_val = 0.995  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.0296  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
+    elif DATASET_NAME == Dataset.fashion_mnist.name:
+        if DATASET_PERCENTAGE == 0.1:
+            acc_bl_val = 0.902  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.4366  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        elif DATASET_PERCENTAGE == 1.0:
+            acc_bl_val = 0.937  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.2480  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 1442954  # Found by using param_count() on our implementation of SimpleNet
+    elif DATASET_NAME == Dataset.cifar10.name:
+        if DATASET_PERCENTAGE == 0.1:
+            acc_bl_val = 0.683  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 1.2256  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        elif DATASET_PERCENTAGE == 1.0:
+            acc_bl_val = 0.868  # Found as the averages of epoch 25-80 of SimpleNet baseline
+            los_bl_val = 0.4410  # Found as the averages of epoch 25-80 of SimpleNet baseline
+        params_bl_val = 1444106
 
     x_bl = list(x)
     x_bl.insert(0, (min(x)-1))
+
     x_bl.append(max(x) + 1)
     y_bl_acc = [acc_bl_val for val in x_bl]
     y_bl_los = [los_bl_val for val in x_bl]
@@ -223,16 +306,13 @@ def make_plot(data):
 
 def choose_GA():
     if ALGORITHM == "SimpleNet":
-        return SimpleNet()
+        return SimpleNet(INPUT_SHAPE, OUTPUT_SHAPE, DATASET, DATASET_PERCENTAGE, SCALING)
     # Lonely_GA variations
-    elif ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
+    elif "Lonely" in ALGORITHM:
         return LonelyGA(ALGORITHM)
-    # Lonely_Loss_GA variations
-    elif ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers"]:
-        return LonelyLossGA(ALGORITHM)
-    # Lonely_Error_GA variations
-    elif ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
-        return LonelyErrorGA(ALGORITHM)
+    # Crossover_GA variation
+    elif "Crossover" in ALGORITHM:
+        return CrossoverGA(ALGORITHM)
 
 
 gc.enable()
@@ -240,9 +320,12 @@ initialize_tf()
 
 
 # READ EXPERIMENTS FROM FILE
+regex = re.compile('#[\\w\\W]*')
+
 input_file = open(sys.argv[1], "r")
 input_reader = csv.DictReader(input_file)
-experiments = [row for row in input_reader]
+filtered = [row for row in input_reader if not(regex.fullmatch(row["folder_name"]))]
+experiments = filtered
 input_file.close()
 path = ""
 
@@ -263,8 +346,13 @@ for exp in experiments:
     OUTPUT_SHAPE = int(exp["output_shape"])
     SCALING = float(exp["scaling"])
     DATASET_PERCENTAGE = float(exp["dataset_percentage"])
-    if Dataset(int(exp["data_set"])) == Dataset.mnist:
+    DATASET_NAME = exp["data_set"]
+    if exp["data_set"] == Dataset.mnist.name:
         DATASET = datasets.mnist.load_data()
+    elif exp["data_set"] == Dataset.fashion_mnist.name:
+        DATASET = datasets.fashion_mnist.load_data()
+    elif exp["data_set"] == Dataset.cifar10.name:
+        DATASET = datasets.cifar10.load_data()
     else:
         DATASET = datasets.mnist.load_data()
     EPOCHS = int(exp["epochs"])
@@ -295,7 +383,7 @@ for exp in experiments:
         writer.write_to_file(['epochs ', EPOCHS])
         writer.write_to_file(['max_runtime', MAX_RUNTIME])
         writer.write_to_file(['dataset_percentage', DATASET_PERCENTAGE])
-        writer.write_to_file(['dataset', Dataset(int(exp["data_set"])).name])
+        writer.write_to_file(['dataset', exp["data_set"]])
         writer.write_to_file([])
 
         writer.write_to_file(['Hyper parameters'])
@@ -313,33 +401,17 @@ for exp in experiments:
 
         writer.write_to_file(['OUTPUT'])
 
-        if ALGORITHM == "SimpleNet": # TODO: SimpleNet bruger ikke nogle af de parametre der parses, bortset fra repetitions
+        if ALGORITHM == "SimpleNet":
             writer.write_to_file(['epoch', 'accumulated_time', 'accuracy', 'loss'])
-        elif ALGORITHM == "Lonely_GA_Layers":
+        elif "Layers" in ALGORITHM or "Crossover" in ALGORITHM:
             writer.write_to_file(['generation_no', 'params_no', 'layers_no', 'accuracy', 'loss'])
         else:
             writer.write_to_file(['generation_no', 'params_no', 'neurons_no', 'accuracy', 'loss'])
 
         ga = choose_GA()
 
-        if ALGORITHM in ["Lonely_GA", "Lonely_GA_Validation", "Lonely_GA_PS_01", "Lonely_GA_PS_033"]:
-            t = Thread(target=lonely_ga)
-            t.daemon = True
-            t.start()
-            t.join(MAX_RUNTIME)
-            ga.alive = False
-            experiment_data.append(ga.history)
-
-        if ALGORITHM in ["Lonely_Loss_GA", "Lonely_Loss_GA_PS_01", "Lonely_Loss_GA_PS_033", "Lonely_GA_Layers"]:
-            t = Thread(target=lonely_ga)
-            t.daemon = True
-            t.start()
-            t.join(MAX_RUNTIME)
-            ga.alive = False
-            experiment_data.append(ga.history)
-
-        if ALGORITHM in ["Lonely_Error_GA", "Lonely_Error_GA_PS_01", "Lonely_Error_GA_PS_033"]:
-            t = Thread(target=lonely_ga)
+        if "Lonely" in ALGORITHM or "Crossover" in ALGORITHM:
+            t = Thread(target=start_ga)
             t.daemon = True
             t.start()
             t.join(MAX_RUNTIME)
@@ -354,5 +426,6 @@ for exp in experiments:
             experiment_data.append(ga.history)
 
         writer.close()
+    write_summary(experiment_data)
     make_plot(experiment_data)
 

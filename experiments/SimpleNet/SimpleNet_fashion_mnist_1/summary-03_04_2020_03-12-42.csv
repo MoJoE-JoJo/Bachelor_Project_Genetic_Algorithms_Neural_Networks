@@ -1,0 +1,20 @@
+Summary ,03_04_2020_03-12-42
+SimpleNet_fashion_mnist_1
+
+ACCURACY
+Min val, 0.8384
+Max val, 0.9424
+Average stdev, 0.0020674246
+Stdev of stdev, 0.0019060718
+
+LOSS
+Min val, 0.18966791957616805
+Max val, 0.44277847001552584
+Average stdev, 0.008556651105189777
+Stdev of stdev, 0.005170789266568701
+
+PARAMETERS
+Min val, 1442954
+Max val, 1442954
+Average stdev, 0.0
+Stdev of stdev, 0.0
