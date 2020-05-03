@@ -10,18 +10,18 @@ import gc
 # from numba import cuda
 import tensorflow as tf
 
-from src.DNA.LonelyAccuracy.LonelyAccDNA import LonelyAccDNA
-from src.DNA.LonelyAccuracy.LonelyAccDNAParScale import LonelyAccDNAParScale
-from src.DNA.LonelyAccuracy.LonelyAccDNAValidation import LonelyAccDNAValidation
-from src.DNA.LonelyError.LonelyErrDNA import LonelyErrDNA
-from src.DNA.LonelyError.LonelyErrDNAParScale import LonelyErrDNAParScale
-from src.DNA.LonelyLoss.Fitness.LonelyLosDNAExpLoss import LonelyLosDNAExpLoss
-from src.DNA.LonelyLoss.Fitness.LonelyLosDNAOverallExp import LonelyLosDNAOverallExp
-from src.DNA.LonelyLoss.Fitness.LonelyLosDNAParScale import LonelyLosDNAParScale
-from src.DNA.LonelyLoss.Layers.LonelyLosDNALayers import LonelyLosDNALayers
-from src.DNA.LonelyLoss.Layers.LonelyLosDNALayersMutAll import LonelyLosDNALayersMutAll
-from src.DNA.LonelyLoss.Layers.LonelyLosDNALayersMutAllCopy import LonelyLosDNALayersMutAllCopy
-from src.DNA.LonelyLoss.LonelyLosDNA import LonelyLosDNA
+from src.DNA.Baseline.LonelyAccDNA import LonelyAccDNA
+from src.DNA.FitnessFunction.ParScale.LonelyAccDNAParScale import LonelyAccDNAParScale
+from src.DNA.Baseline.LonelyAccDNAValidation import LonelyAccDNAValidation
+from src.DNA.FitnessFunction.Initial.LonelyErrDNA import LonelyErrDNA
+from src.DNA.FitnessFunction.ParScale.LonelyErrDNAParScale import LonelyErrDNAParScale
+from src.DNA.FitnessFunction.Exponential.LonelyLosDNAExpLoss import LonelyLosDNAExpLoss
+from src.DNA.FitnessFunction.Exponential.LonelyLosDNAOverallExp import LonelyLosDNAOverallExp
+from src.DNA.FitnessFunction.ParScale.LonelyLosDNAParScale import LonelyLosDNAParScale
+from src.DNA.Layers.LonelyLosDNALayers import LonelyLosDNALayers
+from src.DNA.Layers.LonelyLosDNALayersMutAll import LonelyLosDNALayersMutAll
+from src.DNA.Layers.LonelyLosDNALayersMutAllCopy import LonelyLosDNALayersMutAllCopy
+from src.DNA.FitnessFunction.Initial.LonelyLosDNA import LonelyLosDNA
 
 
 class LonelyGA:
@@ -131,7 +131,7 @@ class LonelyGA:
 
     def create_population(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
 
-        # ----- LonelyAccGA - fitness on accuracy
+        # ----- Baseline
 
         if self.GA_type == "Lonely_Acc":
             self.population = [LonelyAccDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
@@ -141,18 +141,24 @@ class LonelyGA:
             self.population = [LonelyAccDNAValidation(initial_max_nodes, activation, optimizer, loss, mutation_rate)
                                for i in range(self.population_size)]
 
+        # ----- Fitness function - initial
+
+        elif self.GA_type == "Lonely_Err":
+            self.population = [LonelyErrDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        elif self.GA_type == "Lonely_Los":
+            self.population = [LonelyLosDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
+                               for i in range(self.population_size)]
+
+        # ----- Fitness function - par scale
+
         elif self.GA_type == "Lonely_Acc_Par_Scale_0_1":
             self.population = [LonelyAccDNAParScale(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
                                for i in range(self.population_size)]
 
         elif self.GA_type == "Lonely_Acc_Par_Scale_0_33":
             self.population = [LonelyAccDNAParScale(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
-                               for i in range(self.population_size)]
-
-        # ----- LonelyErrGA - fitness on error rate
-
-        elif self.GA_type == "Lonely_Err":
-            self.population = [LonelyErrDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
                                for i in range(self.population_size)]
 
         elif self.GA_type == "Lonely_Err_Par_Scale_0_1":
@@ -163,12 +169,6 @@ class LonelyGA:
             self.population = [LonelyErrDNAParScale(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
                                for i in range(self.population_size)]
 
-        # ----- LonelyLosGA - fitness on loss
-
-        elif self.GA_type == "Lonely_Los":
-            self.population = [LonelyLosDNA(initial_max_nodes, activation, optimizer, loss, mutation_rate)
-                               for i in range(self.population_size)]
-
         elif self.GA_type == "Lonely_Los_Par_Scale_0_1":
             self.population = [LonelyLosDNAParScale(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.1)
                                for i in range(self.population_size)]
@@ -176,6 +176,8 @@ class LonelyGA:
         elif self.GA_type == "Lonely_Los_Par_Scale_0_33":
             self.population = [LonelyLosDNAParScale(initial_max_nodes, activation, optimizer, loss, mutation_rate, 0.33)
                                for i in range(self.population_size)]
+
+        # ----- Fitness function - exponential loss
 
         elif self.GA_type == "Lonely_Los_Exp_Loss_2":
             self.population = [LonelyLosDNAExpLoss(initial_max_nodes, activation, optimizer, loss, mutation_rate, 2)
@@ -193,6 +195,8 @@ class LonelyGA:
             self.population = [LonelyLosDNAExpLoss(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5)
                                for i in range(self.population_size)]
 
+        # ----- Fitness function - overall exponential
+
         elif self.GA_type == "Lonely_Los_Overall_Exp_2":
             self.population = [LonelyLosDNAOverallExp(initial_max_nodes, activation, optimizer, loss, mutation_rate, 2)
                                for i in range(self.population_size)]
@@ -208,6 +212,8 @@ class LonelyGA:
         elif self.GA_type == "Lonely_Los_Overall_Exp_5":
             self.population = [LonelyLosDNAOverallExp(initial_max_nodes, activation, optimizer, loss, mutation_rate, 5)
                                for i in range(self.population_size)]
+
+        # ----- Layers
 
         elif self.GA_type == "Lonely_Los_Layers_3":
             self.population = [LonelyLosDNALayers(initial_max_nodes, activation, optimizer, loss, mutation_rate, 3)

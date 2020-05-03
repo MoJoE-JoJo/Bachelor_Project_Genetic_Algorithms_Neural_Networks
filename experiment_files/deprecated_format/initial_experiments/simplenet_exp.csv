@@ -1,1 +1,0 @@
-folder_name,repetitions,input_shape,output_shape,scaling,dataset_percentage,data_set,epochs,max_runtime,activation_function,initial_max_nodes,loss_function,optimizer,population_size,mating_pool,mutation_rate,algorithmSimpleNet,5,"(1,1)",1,1.0,1.0,1,1,1,1,1,1,1,1,1,1.0,SimpleNet
