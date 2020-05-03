@@ -1,4 +1,3 @@
-import copy
 import gc
 import math
 
@@ -8,19 +7,19 @@ from tensorflow.keras.utils import to_categorical
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a list of genes, each gene representing a dense layer in the
 # neural network with an initial number of neurons between 1 and a max value
-class LonelyLosDNALayersMutAllCopy:
+class LonelyLosDNALayersMutAll:
     history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
     parameter_scaling = 0.1
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent, genes=None):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
@@ -28,7 +27,10 @@ class LonelyLosDNALayersMutAllCopy:
         self.loss = loss
         self.mutation_rate = mutation_rate
         self.exponent = exponent
-        self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+        if genes is None:
+            self.genes = [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
+        else:
+            self.genes = genes
 
     # Mutates the gene based on a given mutation rate
     def mutate(self):
@@ -42,7 +44,7 @@ class LonelyLosDNALayersMutAllCopy:
     def do_mutate(self):
         # if the DNA contains no genes the only possible mutation is to add a gene (layer)
         if len(self.genes) == 0:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # else either mutate a gene or add/remove a gene
         else:
             mutation_type = random.choice([1, 2])
@@ -61,10 +63,7 @@ class LonelyLosDNALayersMutAllCopy:
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            new_gene = copy.deepcopy(self.genes[-1])
-            new_gene.mutate()
-            self.genes = self.genes + [new_gene]
-            # self.genes[len(self.genes) - 1].mutate()
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))
@@ -81,13 +80,13 @@ class LonelyLosDNALayersMutAllCopy:
         #output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
 
         #model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
-
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten(input_shape=input_shape))
         if len(self.genes) > 0:
             for gene in self.genes:
                 model.add(tf.keras.layers.Dense(gene.node_count, activation=self.activation.name))
         model.add(tf.keras.layers.Dense(output_shape, activation='softmax'))
+
 
         if self.loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
             y_train = to_categorical(y_train, 10)
@@ -100,9 +99,10 @@ class LonelyLosDNALayersMutAllCopy:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-        loss = (1 / hist.history['loss'][-1])
-        self.num_params = model.count_params()
 
+        loss = (1 / hist.history['loss'][-1])
+
+        self.num_params = model.count_params()
         self.fitness = math.pow(loss, self.exponent) / (math.pow(self.num_params, self.parameter_scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)

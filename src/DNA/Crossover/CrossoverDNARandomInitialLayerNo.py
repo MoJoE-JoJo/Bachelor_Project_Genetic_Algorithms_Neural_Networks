@@ -7,7 +7,7 @@ from tensorflow.keras.utils import to_categorical
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a list of genes, each gene representing a dense layer in the
@@ -29,7 +29,7 @@ class CrossoverDNARandomInitialLayerNo:
         self.mutation_rate = mutation_rate
         if genes is None:
             number_of_layers = random.randrange(1, 10+1)
-            self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1)) for i in range(number_of_layers)]
+            self.genes = [DenseGene(random.randrange(1, self.initial_max_nodes+1)) for i in range(number_of_layers)]
         else:
             self.genes = genes
 
@@ -45,7 +45,7 @@ class CrossoverDNARandomInitialLayerNo:
     def do_mutate(self):
         # if the DNA contains no genes the only possible mutation is to add a gene (layer)
         if len(self.genes) == 0:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # else either mutate a gene or add/remove a gene
         else:
             mutation_type = random.choice([1, 2])
@@ -64,7 +64,7 @@ class CrossoverDNARandomInitialLayerNo:
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))

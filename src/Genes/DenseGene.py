@@ -4,7 +4,7 @@ import random
 # these being the number of nodes in the layer
 
 
-class LonelyGene:
+class DenseGene:
     __low_node_percentage = 0.77
     __high_node_percentage = 1.3
 

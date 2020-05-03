@@ -7,32 +7,32 @@ from tensorflow.keras.utils import to_categorical
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
-# Contains a list of genes, each gene representing a dense layer in the
-# neural network with an initial number of neurons between 1 and a max value
-class LonelyLosDNALayersMutAll:
+# Contains a list of genes, initially of length 1
+class CrossoverDNAMinLayers:
     history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
+    exponent = 3
     parameter_scaling = 0.1
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent, genes=None):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, genes=None):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.exponent = exponent
         if genes is None:
-            self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = [DenseGene(random.randrange(1, self.initial_max_nodes+1)),
+                          DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         else:
             self.genes = genes
 
-    # Mutates the gene based on a given mutation rate
+    # check if the DNA should mutate
     def mutate(self):
         mutation = random.uniform(0.0, 1.0)
         if mutation > self.mutation_rate:
@@ -42,16 +42,11 @@ class LonelyLosDNALayersMutAll:
 
     # decide mutate type
     def do_mutate(self):
-        # if the DNA contains no genes the only possible mutation is to add a gene (layer)
-        if len(self.genes) == 0:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
-        # else either mutate a gene or add/remove a gene
-        else:
-            mutation_type = random.choice([1, 2])
-            if mutation_type == 1:
-                self.mutate_gene()
-            elif mutation_type == 2:
-                self.mutate_gene_no()
+        mutation_type = random.choice([1, 2])
+        if mutation_type == 1:
+            self.mutate_gene()
+        elif mutation_type == 2:
+            self.mutate_gene_no()
 
     # mutate a random gene (layer)
     def mutate_gene(self):
@@ -60,15 +55,18 @@ class LonelyLosDNALayersMutAll:
 
     # randomly add or remove a gene (layer)
     def mutate_gene_no(self):
-        mutation_type = random.choice([1, 2])
-        # add layer
-        if mutation_type == 1:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
-        # remove layer
-        elif mutation_type == 2:
-            self.genes.pop(random.randrange(len(self.genes)))
+        # if the DNA contains only two genes the only possible mutation is to add a gene (layer)
+        if len(self.genes) == 2:
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes + 1))]
+        else:
+            mutation_type = random.choice([1, 2])
+            # add layer
+            if mutation_type == 1:
+                self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
+            # remove layer
+            elif mutation_type == 2:
+                self.genes.pop(random.randrange(len(self.genes)))
 
-    # Calculates the fitness by training a neural network with the hyper parameters specified by the DNA
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling

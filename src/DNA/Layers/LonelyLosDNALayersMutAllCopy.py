@@ -1,3 +1,4 @@
+import copy
 import gc
 import math
 
@@ -7,31 +8,27 @@ from tensorflow.keras.utils import to_categorical
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a list of genes, each gene representing a dense layer in the
 # neural network with an initial number of neurons between 1 and a max value
-class CrossoverDNAValidation:
+class LonelyLosDNALayersMutAllCopy:
     history = None
     fitness = 0.0
     evaluated = 0.0
     num_params = 0
-    exponent = 3 
     parameter_scaling = 0.1
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, genes=None):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, exponent):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        if genes is None:
-            number_of_layers = random.randrange(1, 10+1)
-            self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1)) for i in range(number_of_layers)]
-        else:
-            self.genes = genes
+        self.exponent = exponent
+        self.genes = [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
 
     # Mutates the gene based on a given mutation rate
     def mutate(self):
@@ -45,7 +42,7 @@ class CrossoverDNAValidation:
     def do_mutate(self):
         # if the DNA contains no genes the only possible mutation is to add a gene (layer)
         if len(self.genes) == 0:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # else either mutate a gene or add/remove a gene
         else:
             mutation_type = random.choice([1, 2])
@@ -64,7 +61,10 @@ class CrossoverDNAValidation:
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            new_gene = copy.deepcopy(self.genes[-1])
+            new_gene.mutate()
+            self.genes = self.genes + [new_gene]
+            # self.genes[len(self.genes) - 1].mutate()
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))
@@ -73,6 +73,14 @@ class CrossoverDNAValidation:
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
+
+        #input_layer = [tf.keras.layers.Flatten(input_shape=input_shape)]
+        #hidden_layers = []
+        #if len(self.genes) > 0:
+        #    hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
+        #output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
+
+        #model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
 
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten(input_shape=input_shape))
@@ -89,13 +97,12 @@ class CrossoverDNAValidation:
                       loss=self.loss.name,
                       metrics=['accuracy'])
 
-        hist = model.fit(x_train, y_train, epochs=epochs, verbose=0, validation_split=0.15)
+        hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-
         loss = (1 / hist.history['loss'][-1])
-
         self.num_params = model.count_params()
+
         self.fitness = math.pow(loss, self.exponent) / (math.pow(self.num_params, self.parameter_scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)

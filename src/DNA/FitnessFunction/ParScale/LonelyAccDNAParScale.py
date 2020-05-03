@@ -1,31 +1,32 @@
 import gc
+import math
 
 import tensorflow as tf
 from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
-# from numba import cuda
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a gene representing a dense layer in the neural network
 # with an initial number of neurons between 1 and a max value
-class LonelyErrDNA:
+class LonelyAccDNAParScale:
     fitness = 0.0
     history = None
     evaluated = 0.0
     num_params = 0
 
-    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate):
+    def __init__(self, initial_max_nodes, activation, optimizer, loss, mutation_rate, scaling):
         gc.enable()
         self.initial_max_nodes = initial_max_nodes
         self.activation = activation
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
+        self.scaling = scaling
+        self.gene = DenseGene(random.randrange(1, self.initial_max_nodes+1))
 
     # Mutates the gene based on a given mutation rate
     def mutate(self):
@@ -55,9 +56,12 @@ class LonelyErrDNA:
                       metrics=['accuracy'])
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
-        self.fitness = 1 / (1 - hist.history['accuracy'][-1])
+
         self.history = hist.history
+        accuracy = hist.history['accuracy'][-1]
         self.num_params = model.count_params()
+
+        self.fitness = accuracy / (math.pow(self.num_params, self.scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))

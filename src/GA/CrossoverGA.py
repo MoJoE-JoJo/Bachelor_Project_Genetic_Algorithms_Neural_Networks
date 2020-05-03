@@ -1,20 +1,17 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-# Install TensorFlow
 import math
 import random
 import copy
 import time
 import gc
-
-# from numba import cuda
 import tensorflow as tf
 
-from src.DNA.CrossoverDNAActivationOptimizer import CrossoverDNAActivationOptimizer
-from src.DNA.CrossoverDNARandomInitialLayerNo import CrossoverDNARandomInitialLayerNo
-from src.DNA.CrossoverDNAMinLayers import CrossoverDNAMinLayers
-from src.DNA.CrossoverDNAValidation import CrossoverDNAValidation
-from src.DNA.LonelyLoss.Layers.LonelyLosDNALayersMutAll import LonelyLosDNALayersMutAll
+from src.DNA.Crossover.CrossoverDNAActivationOptimizer import CrossoverDNAActivationOptimizer
+from src.DNA.Crossover.CrossoverDNARandomInitialLayerNo import CrossoverDNARandomInitialLayerNo
+from src.DNA.Crossover.CrossoverDNAMinLayers import CrossoverDNAMinLayers
+from src.DNA.Crossover.CrossoverDNAValidation import CrossoverDNAValidation
+from src.DNA.Layers.LonelyLosDNALayersMutAll import LonelyLosDNALayersMutAll
 
 
 class CrossoverGA:
@@ -201,9 +198,6 @@ class CrossoverGA:
         elif self.GA_type == "Crossover_Min_Layers":
             self.population = [CrossoverDNAMinLayers(self.initial_max_nodes, self.activation, self.optimizer,
                                                      self.loss, self.mutation_rate)
-                               for i in range(self.population_size)]
-        elif self.GA_type == "Crossover_Activation_Optimizer":
-            self.population = [CrossoverDNAActivationOptimizer(self.initial_max_nodes, self.loss, self.mutation_rate)
                                for i in range(self.population_size)]
 
         elif self.GA_type == "Crossover_Activation_Optimizer":

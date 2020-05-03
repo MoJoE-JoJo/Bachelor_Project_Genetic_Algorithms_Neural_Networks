@@ -7,7 +7,7 @@ from tensorflow.keras.utils import to_categorical
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a list of genes, each gene representing a dense layer in the
@@ -26,7 +26,7 @@ class LonelyLosDNALayers:
         self.loss = loss
         self.mutation_rate = mutation_rate
         self.exponent = exponent
-        self.genes = [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+        self.genes = [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
 
     # Mutates the gene based on a given mutation rate
     def mutate(self):
@@ -40,7 +40,7 @@ class LonelyLosDNALayers:
     def do_mutate(self):
         # if the DNA contains no genes the only possible mutation is to add a gene (layer)
         if len(self.genes) == 0:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # else either mutate a gene or add/remove a gene
         else:
             mutation_type = random.choice([1, 2])
@@ -59,7 +59,7 @@ class LonelyLosDNALayers:
         mutation_type = random.choice([1, 2])
         # add layer
         if mutation_type == 1:
-            self.genes = self.genes + [LonelyGene(random.randrange(1, self.initial_max_nodes+1))]
+            self.genes = self.genes + [DenseGene(random.randrange(1, self.initial_max_nodes+1))]
         # remove layer
         elif mutation_type == 2:
             self.genes.pop(random.randrange(len(self.genes)))

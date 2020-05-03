@@ -3,15 +3,16 @@ import gc
 import tensorflow as tf
 from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
+# from numba import cuda
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a gene representing a dense layer in the neural network
 # with an initial number of neurons between 1 and a max value
-class LonelyLosDNA:
+class LonelyAccDNA:
     fitness = 0.0
     history = None
     evaluated = 0.0
@@ -24,7 +25,7 @@ class LonelyLosDNA:
         self.optimizer = optimizer
         self.loss = loss
         self.mutation_rate = mutation_rate
-        self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
+        self.gene = DenseGene(random.randrange(1, self.initial_max_nodes+1))
 
     # Mutates the gene based on a given mutation rate
     def mutate(self):
@@ -54,7 +55,7 @@ class LonelyLosDNA:
                       metrics=['accuracy'])
 
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
-        self.fitness = (1 / hist.history['loss'][-1])
+        self.fitness = hist.history['accuracy'][-1]
         self.history = hist.history
         self.num_params = model.count_params()
 

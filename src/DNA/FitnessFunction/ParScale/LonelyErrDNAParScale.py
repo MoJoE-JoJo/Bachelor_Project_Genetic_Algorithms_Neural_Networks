@@ -7,12 +7,12 @@ from tensorflow.keras.utils import to_categorical
 
 import random
 from src.Enums.LossEnum import Loss
-from src.Genes.LonelyGene import LonelyGene
+from src.Genes.DenseGene import DenseGene
 
 
 # Contains a gene representing a dense layer in the neural network
 # with an initial number of neurons between 1 and a max value
-class LonelyAccDNAParScale:
+class LonelyErrDNAParScale:
     fitness = 0.0
     history = None
     evaluated = 0.0
@@ -26,7 +26,7 @@ class LonelyAccDNAParScale:
         self.loss = loss
         self.mutation_rate = mutation_rate
         self.scaling = scaling
-        self.gene = LonelyGene(random.randrange(1, self.initial_max_nodes+1))
+        self.gene = DenseGene(random.randrange(1, self.initial_max_nodes+1))
 
     # Mutates the gene based on a given mutation rate
     def mutate(self):
@@ -58,10 +58,10 @@ class LonelyAccDNAParScale:
         hist = model.fit(x_train, y_train, epochs=epochs, verbose=0)
 
         self.history = hist.history
-        accuracy = hist.history['accuracy'][-1]
+        error_rate = 1 / (1 - hist.history['accuracy'][-1])
         self.num_params = model.count_params()
 
-        self.fitness = accuracy / (math.pow(self.num_params, self.scaling))
+        self.fitness = error_rate / (math.pow(self.num_params, self.scaling))
 
         result = model.evaluate(x_test, y_test, verbose=0)
         self.evaluated = dict(zip(model.metrics_names, result))
