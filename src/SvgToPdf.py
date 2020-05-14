@@ -13,5 +13,3 @@ for f in files:
     name = f.title().split(".")[0].lower()
     print(name)
     renderPDF.drawToFile(drawing, name+".pdf")
-#drawing = svg2rlg("file.svg")
-#renderPDF.drawToFile(drawing, "file.pdf")

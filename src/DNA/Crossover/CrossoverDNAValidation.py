@@ -10,8 +10,9 @@ from src.Enums.LossEnum import Loss
 from src.Genes.DenseGene import DenseGene
 
 
-# Contains a list of genes, each gene representing a dense layer in the
-# neural network with an initial number of neurons between 1 and a max value
+# DNA containing a list of genes, each gene representing a dense layer in the
+# neural network with an initial number of neurons between 1 and a max value.
+# Using validation split when training network.
 class CrossoverDNAValidation:
     history = None
     fitness = 0.0

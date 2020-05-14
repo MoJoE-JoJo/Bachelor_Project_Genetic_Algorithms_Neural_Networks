@@ -7,7 +7,6 @@ import copy
 import time
 import gc
 
-# from numba import cuda
 import tensorflow as tf
 
 from src.DNA.Baseline.LonelyAccDNA import LonelyAccDNA
@@ -63,6 +62,7 @@ class LonelyGA:
     def evolution(self):
         tc1 = time.time()
         while self.alive:
+            # Calculate fitness for population
             for i in self.population:
                 if self.alive:
                     try:
@@ -77,6 +77,7 @@ class LonelyGA:
                             i.fitness = 0
                     tf.keras.backend.clear_session()
 
+            # Create mating pool and do reproduction
             if self.alive:
                 self.population.sort(key=lambda x: x.fitness, reverse=True)
 

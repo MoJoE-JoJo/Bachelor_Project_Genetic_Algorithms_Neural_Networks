@@ -35,3 +35,10 @@
 	Lonely_Los_Layers_Mut_All_Copy_3
 	Lonely_Los_Layers_Mut_All_Copy_4
 	Lonely_Los_Layers_Mut_All_Copy_5
+
+# Crossover
+    Crossover
+    Crossover_Min_Layers
+    Crossover_Activation_Optimizer
+    Crossover_Random_Initial_Layer_No
+    Crossover_Validation

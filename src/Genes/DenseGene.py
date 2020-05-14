@@ -11,7 +11,7 @@ class DenseGene:
     def __init__(self, nodes):
         self.node_count = nodes
 
-    # mutates node count
+    # Mutate node count
     def mutate(self):
         self.node_count = int(
             random.uniform(self.__low_node_percentage * self.node_count,
