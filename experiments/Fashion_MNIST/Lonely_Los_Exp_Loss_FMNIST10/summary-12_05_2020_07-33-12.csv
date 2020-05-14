@@ -1,0 +1,20 @@
+Summary ,12_05_2020_07-33-12
+Lonely_Los_Exp_Loss_FMNIST10
+
+ACCURACY
+Min val, 0.775
+Max val, 0.867
+Average stdev, 0.009546419
+Stdev of stdev, 0.005930249
+
+LOSS
+Min val, 0.4088996253013611
+Max val, 0.701344600200653
+Average stdev, 0.02333329794955737
+Stdev of stdev, 0.016750888238991887
+
+PARAMETERS
+Min val, 30220
+Max val, 2590120
+Average stdev, 186484.7510839759
+Stdev of stdev, 201496.2471958967

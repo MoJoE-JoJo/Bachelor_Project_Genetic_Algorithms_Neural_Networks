@@ -1,0 +1,20 @@
+Summary ,12_05_2020_04-33-10
+Lonely_GA_Baseline_FMNIST10
+
+ACCURACY
+Min val, 0.768
+Max val, 0.862
+Average stdev, 0.009804658
+Stdev of stdev, 0.0050975024
+
+LOSS
+Min val, 0.40947996735572817
+Max val, 0.6548442630767822
+Average stdev, 0.023851474181371377
+Stdev of stdev, 0.014116448646671302
+
+PARAMETERS
+Min val, 14320
+Max val, 5262910
+Average stdev, 417404.3111648512
+Stdev of stdev, 473262.87261856697

@@ -1,0 +1,20 @@
+Summary ,11_05_2020_08-03-29
+Crossover_max_neurons_100_FMNIST100
+
+ACCURACY
+Min val, 0.867
+Max val, 0.8896
+Average stdev, 0.003002871
+Stdev of stdev, 0.0018162774
+
+LOSS
+Min val, 0.3170436123251915
+Max val, 0.38168969105482103
+Average stdev, 0.008677450181710879
+Stdev of stdev, 0.0044695098162425536
+
+PARAMETERS
+Min val, 31251
+Max val, 311283
+Average stdev, 26163.73934604965
+Stdev of stdev, 16280.50974926346
