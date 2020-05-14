@@ -31,11 +31,7 @@ writer = None
 ga = None
 
 
-def write_to_file(data):
-    print("Writing")
-    writer.write_to_file(data)
-
-
+# Write data to file when notified by GA
 def notify():
     global ga
     if ALGORITHM == "SimpleNet":
@@ -57,6 +53,7 @@ def notify():
                               ga.history[-1]["loss"]])
 
 
+# Start GA with input info from the input file
 def start_ga():
     global experiments, writer, ga,\
            FOLDER_NAME, REPETITIONS, \
@@ -87,6 +84,7 @@ def start_ga():
              notify=notify)
 
 
+# Start SimpleNet
 def simple_net():
     global experiments, writer, ga,\
            FOLDER_NAME, REPETITIONS, \
@@ -112,9 +110,8 @@ def initialize_tf():
 
     model.fit(x_train[:10], y_train[:10], epochs=1, verbose=0)
 
-
+# Write summary file with stdev, stdev of stdev, min and max for accuracy, loss and number of parameters
 def write_summary(data):
-    # prepare data
     ys = data
     min_length = float("inf")
     for i in ys:
@@ -145,7 +142,8 @@ def write_summary(data):
     write_stdev(y_par, writer)
 
 
-def write_min_max(data, writer):
+# Write min and max value of GA data with writer w
+def write_min_max(data, w):
     min_val = float(inf)
     max_val = 0
     for i in data:
@@ -156,19 +154,22 @@ def write_min_max(data, writer):
         if max_i > max_val:
             max_val = max_i
 
-    writer.write_to_file(['Min val', ' ' + str(min_val)])
-    writer.write_to_file(['Max val', ' ' + str(max_val)])
+    w.write_to_file(['Min val', ' ' + str(min_val)])
+    w.write_to_file(['Max val', ' ' + str(max_val)])
 
-def write_stdev(data, writer):
+
+# Write stdev and stdev of stdev with writer w
+def write_stdev(data, w):
     stdevs = [numpy.std(d) for d in data]
 
     avg_stdev = numpy.mean(stdevs)
     stdev_of_stdev = numpy.std(stdevs)
 
-    writer.write_to_file(['Average stdev', ' ' + str(avg_stdev)])
-    writer.write_to_file(['Stdev of stdev', ' ' + str(stdev_of_stdev)])
+    w.write_to_file(['Average stdev', ' ' + str(avg_stdev)])
+    w.write_to_file(['Stdev of stdev', ' ' + str(stdev_of_stdev)])
 
 
+# Make the plot from the GA data
 def make_plot(data):
     global experiments, writer,\
            FOLDER_NAME, REPETITIONS, \
@@ -176,8 +177,7 @@ def make_plot(data):
            ACTIVATION_FUNCTION, INITIAL_MAX_NODES, LOSS_FUNCTION, OPTIMIZER, \
            POPULATION_SIZE, MATING_POOL, MUTATION_RATE, DATASET_NAME
 
-    ys = []
-    ys = data # Need to only select the relevant stuff
+    ys = data  # Need to only select the relevant data
 
     # Makes sure that they have the same length, in case some of
     # the repetitions get to make more generations than the rest

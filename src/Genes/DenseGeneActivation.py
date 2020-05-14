@@ -20,12 +20,10 @@ class DenseGeneActivation:
         elif mutation_type == 1:
             self.mutate_node_count()
 
-    # mutates node count
     def mutate_activation_function(self):
         # Set activation function randomly to either Elu (1) or Relu (6)
         self.activation_function = Activation(random.choice([1, 6]))
 
-    # mutates node count
     def mutate_node_count(self):
         self.node_count = int(
             random.uniform(self.__low_node_percentage * self.node_count,

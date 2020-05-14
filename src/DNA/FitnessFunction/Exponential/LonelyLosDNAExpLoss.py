@@ -10,8 +10,9 @@ from src.Enums.LossEnum import Loss
 from src.Genes.DenseGene import DenseGene
 
 
-# Contains a gene representing a dense layer in the neural network
-# with an initial number of neurons between 1 and a max value
+# DNA containing a gene representing a dense layer in the neural network
+# with an initial number of neurons between 1 and a max value.
+# Fitness function based on loss with exponent and parameter scaling.
 class LonelyLosDNAExpLoss:
     fitness = 0.0
     history = None

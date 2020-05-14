@@ -63,6 +63,7 @@ class CrossoverGA:
     def evolution(self):
         tc1 = time.time()
         while self.alive:
+            # Calculate fitness for population
             for i in self.population:
                 if self.alive:
                     try:
@@ -79,6 +80,7 @@ class CrossoverGA:
                             i.fitness = 0
                     tf.keras.backend.clear_session()
 
+            # Create mating pool and do reproduction
             if self.alive:
                 self.population.sort(key=lambda x: x.fitness, reverse=True)
 
@@ -91,6 +93,7 @@ class CrossoverGA:
                 self.generation_counter += 1
                 self.reproduction(matingpool)
 
+    # Do reproduction based on the type of DNA of the population
     def reproduction(self, matingpool):
         new_population = []
 
@@ -99,7 +102,7 @@ class CrossoverGA:
             parents = random.choices(matingpool, weights=fitness, k=2)  # .choices normalizes the weights
             p1_genes = parents[0].genes
             p2_genes = parents[1].genes
-            if self.GA_type in ["Crossover","Crossover_Random_Initial_Layer_No", "Crossover_Validation"]:
+            if self.GA_type in ["Crossover", "Crossover_Random_Initial_Layer_No", "Crossover_Validation"]:
                 # if not possible to crossover parents do asexual reproduction
                 if (len(p1_genes) == 0 or len(p2_genes) == 0) or (len(p1_genes) == 1 and len(p2_genes) == 1):
                     self.asexual_reproduction(new_population, parents)
@@ -131,6 +134,7 @@ class CrossoverGA:
         c1_genes = copy.deepcopy(p1_genes[:split]) + copy.deepcopy(p2_genes[split:])
         c2_genes = copy.deepcopy(p2_genes[:split]) + copy.deepcopy(p1_genes[split:])
 
+        # Create "children" with the correct type of DNA
         c1 = None
         c2 = None
         if self.GA_type == "Crossover":

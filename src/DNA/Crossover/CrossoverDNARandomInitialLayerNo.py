@@ -10,8 +10,9 @@ from src.Enums.LossEnum import Loss
 from src.Genes.DenseGene import DenseGene
 
 
-# Contains a list of genes, each gene representing a dense layer in the
-# neural network with an initial number of neurons between 1 and a max value
+# DNA containing a list of genes, each gene representing a dense layer in the
+# neural network with an initial number of neurons between 1 and a max value.
+# Initial number of genes is a random number between 1 and 10.
 class CrossoverDNARandomInitialLayerNo:
     history = None
     fitness = 0.0
@@ -41,7 +42,7 @@ class CrossoverDNARandomInitialLayerNo:
         else:
             self.do_mutate()
 
-    # decide mutate type
+    # Decide mutate type
     def do_mutate(self):
         # if the DNA contains no genes the only possible mutation is to add a gene (layer)
         if len(self.genes) == 0:
@@ -54,12 +55,12 @@ class CrossoverDNARandomInitialLayerNo:
             elif mutation_type == 2:
                 self.mutate_gene_no()
 
-    # mutate a random gene (layer)
+    # Mutate a random gene (layer)
     def mutate_gene(self):
         for g in self.genes:
             g.mutate()
 
-    # randomly add or remove a gene (layer)
+    # Randomly add or remove a gene (layer)
     def mutate_gene_no(self):
         mutation_type = random.choice([1, 2])
         # add layer
@@ -74,20 +75,12 @@ class CrossoverDNARandomInitialLayerNo:
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling
 
-        #input_layer = [tf.keras.layers.Flatten(input_shape=input_shape)]
-        #hidden_layers = []
-        #if len(self.genes) > 0:
-        #    hidden_layers = [tf.keras.layers.Dense(gene.node_count, activation=self.activation.name) for gene in self.genes]
-        #output_layer = [tf.keras.layers.Dense(output_shape, activation='softmax')]
-
-        #model = tf.keras.models.Sequential(input_layer + hidden_layers + output_layer)
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Flatten(input_shape=input_shape))
         if len(self.genes) > 0:
             for gene in self.genes:
                 model.add(tf.keras.layers.Dense(gene.node_count, activation=self.activation.name))
         model.add(tf.keras.layers.Dense(output_shape, activation='softmax'))
-
 
         if self.loss == (Loss.categorical_crossentropy or Loss.mean_squared_error):
             y_train = to_categorical(y_train, 10)

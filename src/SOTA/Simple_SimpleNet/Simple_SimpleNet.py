@@ -4,9 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import tensorflow as tf
 from tensorflow.keras import datasets
-from tensorflow.keras.utils import to_categorical
 from src.Enums.OptimizerEnum import Optimizer
-from src.Enums.ActivationEnum import Activation
 from src.Enums.LossEnum import Loss
 
 convStrides = 1  # stride 1 allows us to leave all spatial down-sampling to the POOL layers
@@ -108,29 +106,12 @@ model = tf.keras.models.Sequential([
     tf.keras.layers.Dropout(rate=conv_dropout),
 
     tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=initial_bias_constant), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
-    #tf.keras.layers.LeakyReLU(alpha=0.1),
     tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
     tf.keras.layers.Dropout(rate=conv_dropout),
 
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(10, activation='softmax')
-
-    #tf.keras.layers.Conv2D(filters=filterSizeL, kernel_size=(convKernelSize, convKernelSize), strides=(convStrides, convStrides), padding="same", kernel_initializer='glorot_uniform', bias_initializer=tf.keras.initializers.Constant(value=0.1), kernel_regularizer=tf.keras.regularizers.l2(weight_decay), input_shape=input_shape, data_format='channels_last'),
-    #tf.keras.layers.MaxPool2D(pool_size=(poolKernelSize, poolKernelSize), strides=(poolStrides, poolStrides), data_format='channels_last', padding="same"),
-    #tf.keras.layers.Dropout(rate=conv_dropout),
-
-    #tf.keras.layers.Flatten(),
-    #tf.keras.layers.Dense(10, activation='softmax')
-
-    #tf.keras.layers.GlobalAveragePooling2D(data_format='channels_last')
 ])
-
-#loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=model, labels=tf.stop_gradient(y_test)))
-#global_step = tf.Variable(0, name="global_step")
-
-
-#model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate).minimize(loss=loss, var_list=global_step),
-#              metrics=['accuracy'])
 
 model.compile(optimizer=Optimizer.Adam.name,
               loss=Loss.sparse_categorical_crossentropy.name,

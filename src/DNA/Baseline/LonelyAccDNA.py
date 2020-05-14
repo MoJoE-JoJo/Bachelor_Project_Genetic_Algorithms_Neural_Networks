@@ -3,15 +3,15 @@ import gc
 import tensorflow as tf
 from tensorflow.keras import datasets
 from tensorflow.keras.utils import to_categorical
-# from numba import cuda
 
 import random
 from src.Enums.LossEnum import Loss
 from src.Genes.DenseGene import DenseGene
 
 
-# Contains a gene representing a dense layer in the neural network
+# DNA containing a gene representing a dense layer in the neural network
 # with an initial number of neurons between 1 and a max value
+# Fitness based on accuracy, using validation split when training the neural network
 class LonelyAccDNA:
     fitness = 0.0
     history = None
@@ -35,7 +35,7 @@ class LonelyAccDNA:
         else:
             self.gene.mutate()
 
-    # Calculates the fitness by training a neural network with the hyper parameters specified by the DNA
+    # Calculates the fitness by training a neural network with the hyperparameters specified by the DNA
     def fitness_func(self, input_shape=(28, 28), output_shape=10, data=datasets.mnist.load_data(), scaling=255.0, epochs=5):
         (x_train, y_train), (x_test, y_test) = data
         x_train, x_test = x_train / scaling, x_test / scaling

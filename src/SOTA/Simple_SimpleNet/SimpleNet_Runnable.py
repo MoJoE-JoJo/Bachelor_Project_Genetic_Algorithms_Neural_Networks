@@ -7,6 +7,7 @@ import time
 from src.Enums.OptimizerEnum import Optimizer
 from src.Enums.LossEnum import Loss
 
+
 class SimpleNet:
 
     def __init__(self, input_shape, output_shape, dataset, dataset_percentage, scaling):
@@ -190,7 +191,6 @@ class SimpleNet:
             tf.keras.layers.Dense(output_shape, activation='softmax')
 
         ])
-
 
     def start(self, notify):
         self.history = []
